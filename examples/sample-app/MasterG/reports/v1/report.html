@@ -1,0 +1,1871 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MasterG Report</title>
+<script>
+(function () {
+  try {
+    var saved = localStorage.getItem("masterg-theme");
+    var theme = saved || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    document.documentElement.setAttribute("data-theme", theme === "dark" ? "dark" : "light");
+  } catch (e) {
+    document.documentElement.setAttribute("data-theme", "light");
+  }
+})();
+</script>
+<style>
+/* Graded paper - strict teacher + tech. Tokens in variables; AA-checked pairs. */
+:root,
+html[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #F6F0E6;
+  --surface: #FFFBF4;
+  --line: #E3D8C8;
+  --ink: #2B1D14;
+  --muted: #7A6656;
+  --accent: #C2603A;
+  --accent-text: #9C4626;
+  --accent-ink: #FFFBF4;
+  --chip: #F0E6D6;
+  --focus: #9C4626;
+  --warn-bg: #F3E4D0;
+
+  --score-latte: #EBD9C3;
+  --score-mocha: #B07A52;
+  --score-espresso: #4A2E1D;
+  --score-track: #E3D8C8;
+  --score-mocha-text: #8B5230;
+
+  --sev-critical: #B3261E;
+  --sev-critical-bg: #F8E8E6;
+  --sev-major: #8A5A12;
+  --sev-major-bg: #F5EBD8;
+  --sev-minor: #5E5348;
+  --sev-minor-bg: #EFE8DE;
+
+  --shadow: 0 1px 0 rgba(43, 29, 20, 0.06);
+  --scroll-thumb: #C2603A;
+  --scroll-track: #E3D8C8;
+  --radius: 10px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: Georgia, "Times New Roman", Times, serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg: #1A120D;
+  --surface: #241A13;
+  --line: #3A2B20;
+  --ink: #F0E6D8;
+  --muted: #A8927E;
+  --accent: #E08A5F;
+  --accent-text: #E08A5F;
+  --accent-ink: #1A120D;
+  --chip: #2F231A;
+  --focus: #E08A5F;
+  --warn-bg: #3A2B20;
+
+  --score-latte: #5C4030;
+  --score-mocha: #B07A52;
+  --score-espresso: #EBD9C3;
+  --score-track: #3A2B20;
+  --score-mocha-text: #E0A87A;
+
+  --sev-critical: #F07167;
+  --sev-critical-bg: #3A1E1C;
+  --sev-major: #E0B35A;
+  --sev-major-bg: #3A2E18;
+  --sev-minor: #A8927E;
+  --sev-minor-bg: #2F231A;
+
+  --shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+  --scroll-thumb: #E08A5F;
+  --scroll-track: #3A2B20;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+/* Custom scrollbars (vertical + horizontal) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: var(--scroll-track);
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--scroll-thumb) 75%, var(--scroll-track));
+  border-radius: 999px;
+  border: 2px solid var(--scroll-track);
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb);
+}
+*::-webkit-scrollbar-corner {
+  background: var(--scroll-track);
+}
+
+body {
+  margin: 0;
+  font-family: var(--font);
+  color: var(--ink);
+  line-height: 1.5;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent) 5%, var(--bg)) 0%, var(--bg) 220px),
+    var(--bg);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+a { color: var(--accent-text); }
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent-text);
+  color: var(--accent-ink);
+  padding: 8px 12px;
+  z-index: 100;
+  border-radius: 0 0 6px 0;
+  font-weight: 700;
+}
+.skip-link:focus { left: 0; }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background: color-mix(in srgb, var(--bg) 86%, transparent);
+  border-bottom: 1px solid var(--line);
+}
+.topbar-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 10px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.topbar .brand {
+  margin: 0;
+  font-size: 0.7rem;
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 28px 22px 88px;
+}
+
+/* Subtle paper grain (no network) */
+body::before {
+  content: "";
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.wrap, .topbar { position: relative; z-index: 1; }
+
+/* Header */
+header.hero { margin-bottom: 28px; }
+.toprow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.brand {
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+h1 {
+  margin: 6px 0 0;
+  font-size: clamp(1.85rem, 3.4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+}
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: flex-end; }
+.header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+}
+@media (max-width: 640px) {
+  .wrap { padding: 20px 14px 72px; }
+  .topbar-inner { padding: 8px 14px; }
+  .toprow { gap: 10px; }
+  .header-actions { width: 100%; justify-content: flex-start; }
+  .meta { justify-content: flex-start; }
+  .scoreboard { gap: 18px; padding: 18px 14px; }
+  .ring { width: 128px; height: 128px; }
+  .ring-inner .num { font-size: 2rem; }
+  .tile { min-height: 0; }
+  .grid { grid-template-columns: 1fr; gap: 10px; }
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 4px;
+  background: var(--chip);
+  color: var(--ink);
+  font-size: 0.78rem;
+  font-weight: 600;
+  border: 1px solid transparent;
+}
+.chip.muted {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--muted);
+  font-weight: 500;
+}
+button.chip { font: inherit; cursor: pointer; }
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.theme-toggle button {
+  font: inherit;
+  cursor: pointer;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 6px 11px;
+  border-radius: 999px;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+.theme-toggle button[aria-pressed="true"] {
+  background: var(--accent-text);
+  color: var(--accent-ink);
+}
+.theme-toggle button:hover:not([aria-pressed="true"]) {
+  color: var(--ink);
+  background: var(--chip);
+}
+
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.btn-export {
+  font: inherit;
+  cursor: pointer;
+  border: 1px solid var(--line);
+  background: var(--accent-text);
+  color: var(--accent-ink);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: var(--shadow);
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+.btn-export:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.btn-export:active { transform: translateY(0); }
+
+/* Charts */
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+.chart-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+.chart-card h3 {
+  margin: 0 0 12px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+.chart-card .chart-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 0;
+}
+.chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.chart-svg .grid-line { stroke: var(--line); stroke-width: 1; }
+.chart-svg .axis-label {
+  fill: var(--muted);
+  font-size: 10px;
+  font-family: var(--font);
+}
+.chart-svg .series {
+  fill: none;
+  stroke: var(--accent-text);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  transition: stroke-dashoffset 0.9s ease;
+}
+.chart-svg .series.is-drawn { stroke-dashoffset: 0; }
+.chart-svg .series-area {
+  fill: color-mix(in srgb, var(--accent) 18%, transparent);
+  stroke: none;
+  opacity: 0;
+  transition: opacity 0.6s ease 0.2s;
+}
+.chart-svg .series-area.is-drawn { opacity: 1; }
+.chart-svg .dot {
+  fill: var(--surface);
+  stroke: var(--accent-text);
+  stroke-width: 2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.chart-svg .dot.is-drawn { opacity: 1; }
+.chart-svg .donut-arc {
+  transition: stroke-dasharray 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.chart-svg .bar {
+  fill: var(--score-mocha);
+}
+.chart-svg .bar.high { fill: var(--score-espresso); }
+.chart-svg .bar.mid { fill: var(--score-mocha); }
+.chart-svg .bar.low { fill: var(--score-latte); }
+.chart-svg .bar-label {
+  fill: var(--ink);
+  font-size: 11px;
+  font-family: var(--font);
+}
+.chart-svg .bar-score {
+  fill: var(--ink);
+  font-size: 12px;
+  font-family: var(--serif);
+  font-weight: 700;
+}
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 14px;
+  margin-top: 10px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.chart-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chart-legend i {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+}
+.hbar-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 140px) 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.hbar-row .name {
+  font-size: 0.8rem;
+  color: var(--ink);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.hbar-track {
+  height: 10px;
+  background: var(--score-track);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.hbar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--score-mocha);
+  width: 0;
+  transition: width 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hbar-fill, .chart-svg .series, .chart-svg .series-area, .chart-svg .dot, .chart-svg .donut-arc {
+    transition: none;
+  }
+}
+.hbar-fill.high { background: var(--score-espresso); }
+.hbar-fill.mid { background: var(--score-mocha); }
+.hbar-fill.low { background: var(--score-latte); }
+.hbar-score {
+  font-family: var(--serif);
+  font-weight: 700;
+  font-size: 0.95rem;
+  min-width: 2.4rem;
+  text-align: right;
+}
+.spark-row {
+  display: grid;
+  grid-template-columns: minmax(90px, 140px) 1fr auto;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+}
+.spark-row svg { width: 100%; height: 28px; display: block; }
+
+.scoreboard {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 28px;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 26px 28px;
+  box-shadow: var(--shadow);
+  animation: paper-in 0.55s ease both;
+}
+@keyframes paper-in {
+  /* Transform only - never fade from 0 (breaks first paint / screenshots) */
+  from { transform: translateY(8px); }
+  to { transform: translateY(0); }
+}
+@media (max-width: 720px) {
+  .scoreboard {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    text-align: center;
+    padding: 22px 18px;
+  }
+}
+
+.ring {
+  --p: 0;
+  --ring-fill: var(--accent);
+  width: 152px;
+  height: 152px;
+  border-radius: 50%;
+  background: conic-gradient(var(--ring-fill) calc(var(--p) * 1%), var(--score-track) 0);
+  display: grid;
+  place-items: center;
+  position: relative;
+  transition: filter 0.35s ease;
+  animation: ring-in 0.7s ease both;
+}
+@keyframes ring-in {
+  from { transform: scale(0.96); }
+  to { transform: scale(1); }
+}
+.ring::before {
+  content: "";
+  position: absolute;
+  inset: 11px;
+  border-radius: 50%;
+  background: var(--surface);
+  border: 1px solid var(--line);
+}
+.ring-inner {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+.ring-inner .num {
+  font-family: var(--serif);
+  font-size: 2.45rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--ink);
+}
+.ring-inner .band {
+  margin-top: 6px;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.verdict {
+  font-family: var(--serif);
+  font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+  color: var(--ink);
+}
+.submeta { color: var(--muted); font-size: 0.92rem; }
+.submeta strong { color: var(--ink); font-weight: 700; }
+
+.delta {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+.delta.up::before { content: "▲ "; color: var(--accent-text); }
+.delta.down::before { content: "▼ "; color: var(--sev-critical); }
+.delta.flat::before { content: "· "; color: var(--muted); }
+
+/* Sections */
+section { margin-top: 36px; }
+section h2 {
+  margin: 0 0 14px;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+  /* Prevent one open Details drawer from stretching sibling cards in the row */
+  align-items: start;
+}
+
+.tile {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 16px 14px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 156px;
+  overflow: hidden;
+  width: 100%;
+  transition:
+    transform 0.22s ease,
+    box-shadow 0.22s ease,
+    border-color 0.22s ease;
+  animation: paper-in 0.45s ease both;
+  animation-delay: calc(var(--i, 0) * 35ms);
+}
+.tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(43, 29, 20, 0.08);
+  border-color: color-mix(in srgb, var(--accent) 28%, var(--line));
+}
+@media (prefers-reduced-motion: reduce) {
+  .tile:hover { transform: none; }
+}
+.tile::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--score-bar, var(--line));
+}
+.tile.unverified {
+  opacity: 0.78;
+  background: color-mix(in srgb, var(--surface) 70%, var(--line));
+}
+.tile.unverified::before { background: var(--line); }
+
+.tile-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: flex-start;
+}
+.tile-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  padding-left: 6px;
+}
+.tile-score {
+  font-family: var(--serif);
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: var(--score-ink, var(--ink));
+  white-space: nowrap;
+}
+.tile-summary {
+  color: var(--muted);
+  font-size: 0.9rem;
+  flex: 1;
+  padding-left: 6px;
+  line-height: 1.45;
+}
+.tile-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding-left: 6px;
+}
+
+button.details, button.tab, button.filter, select { font: inherit; cursor: pointer; }
+button.details {
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 6px 11px;
+  font-size: 0.78rem;
+  font-weight: 650;
+  transition: border-color 0.18s ease, color 0.18s ease, background 0.18s ease;
+}
+button.details:hover { border-color: var(--accent); color: var(--accent-text); }
+button.details[aria-expanded="true"] {
+  background: var(--chip);
+  border-color: color-mix(in srgb, var(--accent) 40%, var(--line));
+  color: var(--accent-text);
+}
+
+.drawer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: 0;
+  margin-left: 6px;
+  font-size: 0.9rem;
+  transition:
+    grid-template-rows 0.3s ease,
+    opacity 0.22s ease,
+    margin-top 0.22s ease;
+}
+.drawer.open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 4px;
+}
+.drawer-inner {
+  overflow: hidden;
+  min-height: 0;
+  border-top: 1px dashed transparent;
+  padding-top: 0;
+  transition: border-color 0.22s ease, padding-top 0.22s ease;
+}
+.drawer.open .drawer-inner {
+  border-top-color: var(--line);
+  padding-top: 12px;
+}
+.drawer h3 {
+  margin: 14px 0 6px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.drawer h3:first-child { margin-top: 0; }
+.drawer p { margin: 0 0 8px; color: var(--ink); }
+@media (prefers-reduced-motion: reduce) {
+  .drawer, .drawer-inner, button.details, .tile, .card, button.tab, .ring, .scoreboard, .panel {
+    transition: none;
+    animation: none;
+  }
+  .tile:hover, .card:hover { transform: none; }
+}
+html[data-theme="dark"] .tile:hover,
+html[data-theme="dark"] .card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.ev {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--accent) 22%, var(--line));
+  box-shadow: 0 6px 18px rgba(43, 29, 20, 0.07);
+}
+.card h3 {
+  margin: 10px 0 8px;
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+
+/* Red pen severity - always labeled text */
+.sev {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 3px;
+  border: 1px solid transparent;
+}
+.sev.critical {
+  color: var(--sev-critical);
+  background: var(--sev-critical-bg);
+  border-color: color-mix(in srgb, var(--sev-critical) 25%, transparent);
+}
+.sev.major {
+  color: var(--sev-major);
+  background: var(--sev-major-bg);
+  border-color: color-mix(in srgb, var(--sev-major) 25%, transparent);
+}
+.sev.minor, .sev.nit {
+  color: var(--sev-minor);
+  background: var(--sev-minor-bg);
+  border-color: color-mix(in srgb, var(--sev-minor) 20%, transparent);
+}
+
+.strengths { display: flex; flex-wrap: wrap; gap: 8px; }
+.strength {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+button.tab {
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-weight: 650;
+  font-size: 0.88rem;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+button.tab:hover { color: var(--ink); background: var(--chip); }
+button.tab[aria-selected="true"] {
+  background: var(--accent-text);
+  color: var(--accent-ink);
+  border-color: var(--accent-text);
+}
+.panel {
+  animation: panel-in 0.35s ease both;
+}
+.panel[hidden] { display: none; }
+@keyframes panel-in {
+  from { transform: translateY(6px); }
+  to { transform: translateY(0); }
+}
+
+.progress-bar {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  height: 88px;
+  margin: 12px 0 18px;
+  padding: 12px 14px 8px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.progress-bar .col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.progress-bar .bar {
+  width: 100%;
+  max-width: 36px;
+  border-radius: 3px 3px 1px 1px;
+  background: var(--score-mocha);
+}
+.progress-bar .lbl { font-size: 0.7rem; color: var(--muted); font-weight: 600; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+th, td {
+  text-align: left;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line);
+  font-variant-numeric: tabular-nums;
+}
+th {
+  color: var(--muted);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: color-mix(in srgb, var(--chip) 70%, var(--surface));
+}
+tr:last-child td { border-bottom: 0; }
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+.filters label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.dd {
+  position: relative;
+  min-width: 148px;
+}
+.dd-trigger {
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 6px;
+  padding: 7px 12px;
+  box-shadow: var(--shadow);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.dd-trigger:hover,
+.dd.open .dd-trigger {
+  border-color: var(--accent);
+}
+.dd-trigger .dd-caret {
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 5px solid var(--muted);
+  transition: transform 0.18s ease;
+  flex-shrink: 0;
+}
+.dd.open .dd-caret { transform: rotate(180deg); }
+.dd-menu {
+  position: absolute;
+  z-index: 40;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(43, 29, 20, 0.14);
+  padding: 4px;
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+html[data-theme="dark"] .dd-menu {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+.dd.open .dd-menu {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.dd-option {
+  font: inherit;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  border-radius: 5px;
+  padding: 8px 10px;
+  font-size: 0.88rem;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+.dd-option:hover,
+.dd-option:focus-visible {
+  background: var(--chip);
+  color: var(--accent-text);
+  outline: none;
+}
+.dd-option[aria-selected="true"] {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+  color: var(--accent-text);
+  font-weight: 700;
+}
+
+/* Horizontal scroll wrappers (tables on narrow screens) */
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  -webkit-overflow-scrolling: touch;
+}
+.table-scroll table {
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  min-width: 520px;
+}
+
+footer.foot {
+  margin-top: 52px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+.assumptions { margin: 8px 0 0; padding-left: 1.15rem; }
+.insufficient {
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: var(--warn-bg);
+  color: var(--ink);
+  font-weight: 650;
+  text-align: left;
+}
+
+@media print {
+  :root, html[data-theme="dark"] {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --line: #cccccc;
+    --ink: #111111;
+    --muted: #555555;
+    --accent: #9C4626;
+    --accent-text: #9C4626;
+    --chip: #f3f3f3;
+  }
+  body { background: white; color: black; }
+  body::before, .topbar, .tabs, button.details, .theme-toggle, .filters, .skip-link, .btn-export {
+    display: none !important;
+  }
+  .chart-card { break-inside: avoid; box-shadow: none; }
+  .drawer {
+    display: grid !important;
+    grid-template-rows: 1fr !important;
+    opacity: 1 !important;
+  }
+  .drawer-inner {
+    border-top-color: #ccc !important;
+    padding-top: 10px !important;
+  }
+  .tile, .card, .scoreboard { break-inside: avoid; box-shadow: none; transform: none; }
+  .panel[hidden] { display: block !important; }
+  a { text-decoration: none; color: inherit; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to report</a>
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">MasterG · Graded review</div>
+    <div class="topbar-actions">
+      <button type="button" class="btn-export" id="btn-export-pdf" aria-label="Export PDF">Export PDF</button>
+      <div class="theme-toggle" role="group" aria-label="Color theme">
+        <button type="button" id="theme-light" aria-pressed="true">Light</button>
+        <button type="button" id="theme-dark" aria-pressed="false">Dark</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="wrap" id="main">
+  <header class="hero">
+    <div class="toprow">
+      <div>
+        <div class="brand">Product review</div>
+        <h1 id="product-name">-</h1>
+      </div>
+      <div class="header-actions">
+        <div class="meta" id="meta-chips"></div>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <div class="ring" id="score-ring" style="--p:0" aria-hidden="true">
+        <div class="ring-inner">
+          <div class="num" id="overall-num">-</div>
+          <div class="band" id="overall-band">-</div>
+        </div>
+      </div>
+      <div>
+        <p class="verdict" id="verdict-line"></p>
+        <div class="submeta" id="submeta"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Report views">
+    <button class="tab" role="tab" id="tab-summary" aria-selected="true" aria-controls="panel-summary">Summary</button>
+    <button class="tab" role="tab" id="tab-findings" aria-selected="false" aria-controls="panel-findings">Findings</button>
+    <button class="tab" role="tab" id="tab-progress" aria-selected="false" aria-controls="panel-progress">Progress</button>
+  </div>
+
+  <div class="panel" id="panel-summary" role="tabpanel" aria-labelledby="tab-summary">
+    <section>
+      <h2>Score snapshot</h2>
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Category scores</h3>
+          <div id="chart-category-bars"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Open findings mix</h3>
+          <div id="chart-findings-donut"></div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <h2>Categories</h2>
+      <div class="grid" id="category-grid"></div>
+    </section>
+    <section>
+      <h2>Fix first</h2>
+      <div class="cards" id="fix-first"></div>
+    </section>
+    <section>
+      <h2>Strengths</h2>
+      <div class="strengths" id="strengths"></div>
+    </section>
+  </div>
+
+  <div class="panel" id="panel-findings" role="tabpanel" aria-labelledby="tab-findings" hidden>
+    <section>
+      <h2>All findings</h2>
+      <div class="filters">
+        <label>Severity
+          <div class="dd" id="filter-severity" data-value="all">
+            <button type="button" class="dd-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Filter by severity">
+              <span class="dd-label">All</span><span class="dd-caret" aria-hidden="true"></span>
+            </button>
+            <div class="dd-menu" role="listbox" hidden>
+              <button type="button" class="dd-option" role="option" data-value="all" aria-selected="true">All</button>
+              <button type="button" class="dd-option" role="option" data-value="critical" aria-selected="false">Critical</button>
+              <button type="button" class="dd-option" role="option" data-value="major" aria-selected="false">Major</button>
+              <button type="button" class="dd-option" role="option" data-value="minor" aria-selected="false">Minor</button>
+              <button type="button" class="dd-option" role="option" data-value="nit" aria-selected="false">Nit</button>
+            </div>
+          </div>
+        </label>
+        <label>Status
+          <div class="dd" id="filter-status" data-value="open">
+            <button type="button" class="dd-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="Filter by status">
+              <span class="dd-label">Open only</span><span class="dd-caret" aria-hidden="true"></span>
+            </button>
+            <div class="dd-menu" role="listbox" hidden>
+              <button type="button" class="dd-option" role="option" data-value="open" aria-selected="true">Open only</button>
+              <button type="button" class="dd-option" role="option" data-value="all" aria-selected="false">All</button>
+              <button type="button" class="dd-option" role="option" data-value="new" aria-selected="false">New</button>
+              <button type="button" class="dd-option" role="option" data-value="persisting" aria-selected="false">Persisting</button>
+              <button type="button" class="dd-option" role="option" data-value="resolved" aria-selected="false">Resolved</button>
+              <button type="button" class="dd-option" role="option" data-value="regressed" aria-selected="false">Regressed</button>
+            </div>
+          </div>
+        </label>
+      </div>
+      <div class="cards" id="findings-list"></div>
+    </section>
+  </div>
+
+  <div class="panel" id="panel-progress" role="tabpanel" aria-labelledby="tab-progress" hidden>
+    <section>
+      <h2>Trends</h2>
+      <div class="chart-grid">
+        <div class="chart-card" style="grid-column: 1 / -1">
+          <h3>Overall score by version</h3>
+          <div id="chart-overall-line"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Category sparklines</h3>
+          <div id="chart-category-sparks"></div>
+        </div>
+        <div class="chart-card">
+          <h3>Findings status</h3>
+          <div id="chart-findings-status"></div>
+        </div>
+      </div>
+      <div class="progress-bar" id="progress-bars" aria-label="Overall score by version" style="margin-top:14px"></div>
+      <div class="meta" id="version-switcher" style="margin-top:10px"></div>
+    </section>
+    <section>
+      <h2>Metrics</h2>
+      <div id="chart-metrics" class="chart-card" style="margin-bottom:14px"></div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Metric</th><th>Value</th><th>Previous</th><th>Δ</th><th>Status</th></tr>
+          </thead>
+          <tbody id="metrics-body"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <footer class="foot" id="footer"></footer>
+</div>
+
+<script type="application/json" id="masterg-data">{"latest_version": 1, "versions": [{"schema": "masterg.data/1", "version": 1, "created_at": "2026-11-18T06:27:25Z", "rubric_version": "1.0.0", "previous_version": null, "product": {"name": "Blink", "type": "mobile_app", "platforms": ["android"], "stack": "flutter", "one_liner": "Anonymous ephemeral file sharing with minute-scale auto-delete, QR links, and privacy modes", "audience": "Android users who need a quick private file drop without accounts or permanent cloud copies", "stage": "live", "goal": "earn", "url": "https://play.google.com/store/apps/details?id=com.darkmintis.blink", "repo": "examples/sample-app"}, "assumptions": ["Goal inferred as earn because AdMob units, rewarded Top Up, and a live Play listing with Contains ads are shipped", "Primary audience is English-speaking Android users who already understand link-based file sharing", "Creator can collect AdMob revenue in their region (Play listing lists Nepal support contact)", "No Play Console or analytics export was available; install/rating metrics are omitted rather than guessed"], "inputs": [{"id": "i1", "kind": "code", "path": "pubspec.yaml", "note": "deps version 2.1.0+42"}, {"id": "i2", "kind": "code", "path": "lib/main.dart", "note": "ads consent app-open gate"}, {"id": "i3", "kind": "code", "path": "lib/config/ad_config.dart", "note": "ad units rewards caps"}, {"id": "i4", "kind": "code", "path": "lib/services/consent_service.dart", "note": "UMP GDPR"}, {"id": "i5", "kind": "code", "path": "lib/services/encryption_service.dart", "note": "AES-256-GCM"}, {"id": "i6", "kind": "code", "path": "lib/services/credit_service.dart", "note": "server MB credits"}, {"id": "i7", "kind": "code", "path": "lib/theme/app_theme.dart", "note": "palette type"}, {"id": "i8", "kind": "code", "path": "android/app/src/main/AndroidManifest.xml", "note": "permissions deep links"}, {"id": "i9", "kind": "code", "path": "lib/features/onboarding/screens/onboarding_screen.dart", "note": "3-page onboarding"}, {"id": "i10", "kind": "code", "path": "lib/features/history/widgets/history_empty_state.dart", "note": "empty states"}, {"id": "i11", "kind": "code", "path": "README.md", "note": "product features monetization"}, {"id": "i12", "kind": "screenshot", "path": "MasterG/inputs/v1/screenshots/ss2.png", "note": "home upload"}, {"id": "i13", "kind": "screenshot", "path": "MasterG/inputs/v1/screenshots/ss3.png", "note": "confirm timer privacy"}, {"id": "i14", "kind": "screenshot", "path": "MasterG/inputs/v1/screenshots/ss4.png", "note": "QR success countdown"}, {"id": "i15", "kind": "screenshot", "path": "MasterG/inputs/v1/screenshots/ss5.png", "note": "receive + banner ad"}, {"id": "i16", "kind": "listing", "path": "https://play.google.com/store/apps/details?id=com.darkmintis.blink", "note": "Play listing public"}, {"id": "i17", "kind": "url", "path": "https://blink.darkmintis.workers.dev related site privacy.html", "note": "Blink-site privacy policy"}, {"id": "i18", "kind": "text", "path": "RELEASE_NOTES.md", "note": "2.x release notes"}], "coverage": {"files_reviewed": 38, "files_total": 246, "screenshots": 4, "exports": 0, "web_access": true, "notes": "Reviewed Flutter lib entry, ads/consent/credits/encryption, theme, manifest, onboarding, history empty state, README, release notes, branding screenshots, Play listing, Blink-site privacy page. Did not run the app, review Worker backend source, iOS (none), or Play Console exports. No crash reporter package found in pubspec."}, "competitors": [{"name": "1time.io", "url": "https://1time.io/secure-file-sharing/", "overlap": "high", "why_relevant": "Browser one-time encrypted download links marketed as a Firefox Send / WeTransfer alternative", "source": "web"}, {"name": "Privyfile", "url": "https://privyfile.io/", "overlap": "high", "why_relevant": "No-account private file links with optional E2E, timers, and one-time links", "source": "web"}, {"name": "Transient Files", "url": "https://transientfiles.com/", "overlap": "high", "why_relevant": "Temporary and one-time file links up to 1GB, no sign-up, QR/share", "source": "web"}, {"name": "Smash", "url": "https://fromsmash.com/", "overlap": "medium", "why_relevant": "Popular temporary large-file transfer with link sharing; longer retention than Blink minute timers", "source": "web"}], "rubric": [{"id": "idea", "name": "Idea & Problem", "weight": 10}, {"id": "differentiation", "name": "Differentiation", "weight": 12}, {"id": "revenue", "name": "Revenue Model", "weight": 12}, {"id": "visual", "name": "UI & Visual Design", "weight": 10}, {"id": "ux", "name": "UX & Onboarding", "weight": 10}, {"id": "retention", "name": "Retention & Engagement", "weight": 12}, {"id": "growth", "name": "Growth & Distribution", "weight": 10}, {"id": "technical", "name": "Technical Quality", "weight": 10}, {"id": "trust", "name": "Trust & Compliance", "weight": 6}, {"id": "polish", "name": "Polish & Store Readiness", "weight": 8}], "categories": [{"id": "idea", "applicable": true, "score": 7, "confidence": "high", "summary": "Clear JTBD: send a file that dies, without an account", "why": "Play listing and README both sell anonymous share with auto-delete. Code implements minute timers, Privacy Mode, Instant burn, and no-login credits. That maps to a real job people still use WeTransfer-class tools for, with a sharper privacy promise.", "why_not_higher": "No user interviews, review quotes, or Console churn data proving switch intent from named tools. +2 needs primary evidence that people open Blink for this job weekly.", "evidence": [{"input": "i16", "ref": "Play About this app", "quote": "Send a file. It disappears. No one else ever sees it."}, {"input": "i11", "ref": "README.md:1-12", "quote": "Share files that vanish in minutes. No Accounts: Anonymous sharing"}]}, {"id": "differentiation", "applicable": true, "score": 6, "confidence": "high", "summary": "Mobile privacy modes + minute timers are a real wedge; web one-time tools still dominate the category story", "why": "Versus 1time, Privyfile, Transient, and Smash, Blink ships a native Android flow with Privacy Mode / Instant burn, EXIF strip, QR, and 1-10 minute expiry. That is sharper than generic temporary transfer. The core job (encrypted link that dies) is still crowded on the web.", "why_not_higher": "Needs a harder exclusive wedge that web tools cannot match (e.g. measured screenshot-block reliability, contactless share UX, or proven trust brand) plus store copy that names the contrast.", "evidence": [{"input": "i13", "ref": "ss3.png - Privacy Mode row", "quote": "Privacy Mode - Content available until timer expires"}, {"input": "i18", "ref": "RELEASE_NOTES.md:1-3", "quote": "Exclusive share modes: Privacy or Instant burn"}, {"input": "i16", "ref": "Play listing", "quote": "Privacy mode - screenshot protection"}]}, {"id": "revenue", "applicable": true, "score": 5, "confidence": "medium", "summary": "Rewarded MB + banner + app-open is implemented; unit economics and paid ceiling are unproven", "why": "AdConfig defines rewarded MB (+25), timer extension, banner, and app-open units with maxDailyRewardedAds=4. CreditService syncs MB to a Worker. UMP consent exists. Model fits a free anonymous tool. No IAP/subscription path found, and app-open on cold start remains a policy and UX tax.", "why_not_higher": "Ship a collectible paid Top Up or remove/heavily gate app-open, then show labeled revenue ceiling with real eCPM or Play earnings. No reliable eCPM benchmark available from inputs.", "evidence": [{"input": "i3", "ref": "lib/config/ad_config.dart:1-28", "quote": "rewardedMBAmount = 25; maxDailyRewardedAds = 4; appOpen unit present"}, {"input": "i2", "ref": "lib/main.dart:68-90", "quote": "loadAndShowAppOpenAd after 2s delay when allowAppOpen"}, {"input": "i15", "ref": "ss5.png - bottom", "quote": "Banner ad slot visible on receive surface"}]}, {"id": "visual", "applicable": true, "score": 6, "confidence": "high", "summary": "Consistent dark purple system; looks shipped, still familiar indie-glow territory", "why": "AppTheme defines a single accent (#7c3aed), Inter + Poppins, glass cards, and clear hierarchy. Screenshots show one primary Share CTA, readable white-on-dark body, and coherent upload/QR/receive cards. Brand mark is distinctive. The purple-glow dark look is common for privacy apps, so distinctiveness is moderate.", "why_not_higher": "Tighten uniqueness (less generic purple glow), verify AA on secondary grey labels across all screens, and keep ads visually separated from primary actions.", "evidence": [{"input": "i7", "ref": "lib/theme/app_theme.dart:5-40", "quote": "bgPrimary 0xFF0a0a0f; accent 0xFF7c3aed; Inter + Poppins"}, {"input": "i12", "ref": "ss2.png - home", "quote": "Blink wordmark, quota pill, upload card, single accent"}, {"input": "i14", "ref": "ss4.png - success", "quote": "QR card with countdown ring and clear File Uploaded state"}]}, {"id": "ux", "applicable": true, "score": 7, "confidence": "high", "summary": "Fast path to share; onboarding and empty states exist; cold-start ads still interrupt", "why": "Home makes upload the center. Confirm screen exposes timer chips and Privacy Mode before Share. Success shows QR + countdown. Three-page onboarding; history has empty copy. App Open is skipped during first onboarding session and delayed 2s, which is careful, but returning users still risk a full-screen ad before the next share.", "why_not_higher": "Kill or further suppress app-open around share intents / mid-transfer, and prove offline and receive-error recovery with screenshots or measured drop-off.", "evidence": [{"input": "i9", "ref": "onboarding_screen.dart:28-32", "quote": "WelcomePage, HowItWorksPage, PrivacyQuotaPage"}, {"input": "i10", "ref": "history_empty_state.dart:15-16", "quote": "Nothing shared yet / Nothing received yet"}, {"input": "i2", "ref": "lib/main.dart:81-90", "quote": "never show App Open until next cold start after onboarding; then delay 2s"}]}, {"id": "retention", "applicable": true, "score": 4, "confidence": "medium", "summary": "Ephemeral by design; return loops are weak beyond daily quota and history", "why": "Files vanish in minutes, so the product fights classic habit retention. History, default timer prefs, and daily 100MB credits give a light reason to reopen, but there is no durable personal corpus, social graph, or scheduled need. That is honest for the category, and still a growth risk if earn depends on DAU.", "why_not_higher": "Add a non-creepy return reason (saved recipients/folders of links, widgets for remaining MB, or clear share-from-other-apps habit) and measure D1/D7 from Console.", "evidence": [{"input": "i11", "ref": "README.md:7-11", "quote": "Auto-Expiry: Files vanish after 1-10 minutes"}, {"input": "i12", "ref": "ss2.png - quota", "quote": "100 / 100 MB; 100 MB free daily"}, {"input": "i6", "ref": "credit_service.dart:15-18", "quote": "Server-managed MB credits; local prefs write-through cache"}]}, {"id": "growth", "applicable": true, "score": 6, "confidence": "medium", "summary": "Live listing + QR/link/share intents are real distribution; no Console proof of traction", "why": "Play listing is live with ads disclosure. Manifest registers SEND, SEND_MULTIPLE, and App Links to blink.darkmintis.workers.dev/b/. Success UX pushes QR. Marketing site and privacy page exist. Without installs, conversion, or ASO keyword evidence, growth quality stays inferred from surfaces, not results.", "why_not_higher": "Provide Play Console acquisition/store-listing conversion and a focused ASO pass; add one intentional invite or receive-to-install loop with measurement.", "evidence": [{"input": "i8", "ref": "AndroidManifest.xml:60-82", "quote": "App Links /b/ plus SEND and SEND_MULTIPLE"}, {"input": "i14", "ref": "ss4.png", "quote": "Scan QR to Download"}, {"input": "i16", "ref": "Play listing", "quote": "Blink: Anonymous File Sharing; Contains ads"}]}, {"id": "technical", "applicable": true, "score": 7, "confidence": "high", "summary": "Strong feature-first Flutter + real encryption tests; ops observability thin", "why": "187 Dart lib files under feature folders; README encodes architecture rules. AES-256-GCM with checksum layout; encryption and upload services have unit tests (~45 test files). Foreground service for transfers; cleartextTraffic false. No Sentry/Crashlytics/Firebase Crashlytics in pubspec, so production crash signal is weak.", "why_not_higher": "Add crash reporting + breadcrumb coverage on upload/receive, and keep analyze/test green as release gates with evidence in CI.", "evidence": [{"input": "i5", "ref": "encryption_service.dart:7-14", "quote": "AES-256-GCM for authenticated encryption"}, {"input": "i1", "ref": "pubspec.yaml:1-70", "quote": "cryptography, google_mobile_ads, flutter_foreground_task; no crashlytics"}, {"input": "i11", "ref": "README.md Testing Rules", "quote": "Critical paths must stay covered: encryption, upload/link flow, receive flow"}]}, {"id": "trust", "applicable": true, "score": 7, "confidence": "high", "summary": "E2E encryption, UMP, and a privacy page are real; consent fail-open and device IDs need honesty", "why": "Encryption is client-side AES-GCM. Manifest disables cleartext. ConsentService uses UMP and can open privacy options. Blink-site ships privacy.html. Play Data safety discloses device or other IDs shared with third parties (ads). CreditService sends X-Blink-Device-Id. Consent catch path returns true (ads allowed), which is a compliance sharpness issue.", "why_not_higher": "Fail closed (or non-personalized only) when UMP errors; document device-id purpose in-app; keep Data safety and policy text synced with rewarded/app-open behavior.", "evidence": [{"input": "i4", "ref": "consent_service.dart:68-72", "quote": "On error, assume non-EU and allow ads (graceful degradation)"}, {"input": "i8", "ref": "AndroidManifest.xml:25-26", "quote": "usesCleartextTraffic=false; networkSecurityConfig set"}, {"input": "i16", "ref": "Play Data safety", "quote": "Device or other IDs may be shared with third parties; encrypted in transit"}, {"input": "i17", "ref": "Blink-site/privacy.html", "quote": "Privacy Policy for Blink - Ephemeral File Sharing"}]}, {"id": "polish", "applicable": true, "score": 7, "confidence": "high", "summary": "Live 2.1.0 product with release notes and edge-case hardening; still not spotless", "why": "Version 2.1.0+42, Play listing, branding frames, HEIC rejection notes, history badges, settings redesign called out in RELEASE_NOTES. History empty states exist. Branding receive screenshot still shows a Test Ad banner, which is fine for debug assets but signals ad surfaces sit on primary flows.", "why_not_higher": "Production screenshots without test ads, crash-free metrics, and a short store QA checklist for receive/privacy/burn paths would push this higher.", "evidence": [{"input": "i1", "ref": "pubspec.yaml:version", "quote": "version: 2.1.0+42"}, {"input": "i18", "ref": "RELEASE_NOTES.md", "quote": "HEIC uploads rejected early; Cancel and Share buttons scale on small screens"}, {"input": "i15", "ref": "ss5.png - footer", "quote": "Test Ad banner under Done CTA"}]}], "scores": [{"id": "idea", "name": "Idea & Problem", "weight": 10, "weight_renormalized": 10.0, "applicable": true, "score": 7, "confidence": "high", "summary": "Clear JTBD: send a file that dies, without an account", "why": "Play listing and README both sell anonymous share with auto-delete. Code implements minute timers, Privacy Mode, Instant burn, and no-login credits. That maps to a real job people still use WeTransfer-class tools for, with a sharper privacy promise.", "why_not_higher": "No user interviews, review quotes, or Console churn data proving switch intent from named tools. +2 needs primary evidence that people open Blink for this job weekly.", "evidence": [{"input": "i16", "ref": "Play About this app", "quote": "Send a file. It disappears. No one else ever sees it."}, {"input": "i11", "ref": "README.md:1-12", "quote": "Share files that vanish in minutes. No Accounts: Anonymous sharing"}], "weighted_contribution": 7.0, "delta": null}, {"id": "differentiation", "name": "Differentiation", "weight": 12, "weight_renormalized": 12.0, "applicable": true, "score": 6, "confidence": "high", "summary": "Mobile privacy modes + minute timers are a real wedge; web one-time tools still dominate the category story", "why": "Versus 1time, Privyfile, Transient, and Smash, Blink ships a native Android flow with Privacy Mode / Instant burn, EXIF strip, QR, and 1-10 minute expiry. That is sharper than generic temporary transfer. The core job (encrypted link that dies) is still crowded on the web.", "why_not_higher": "Needs a harder exclusive wedge that web tools cannot match (e.g. measured screenshot-block reliability, contactless share UX, or proven trust brand) plus store copy that names the contrast.", "evidence": [{"input": "i13", "ref": "ss3.png - Privacy Mode row", "quote": "Privacy Mode - Content available until timer expires"}, {"input": "i18", "ref": "RELEASE_NOTES.md:1-3", "quote": "Exclusive share modes: Privacy or Instant burn"}, {"input": "i16", "ref": "Play listing", "quote": "Privacy mode - screenshot protection"}], "weighted_contribution": 7.2, "delta": null}, {"id": "revenue", "name": "Revenue Model", "weight": 12, "weight_renormalized": 12.0, "applicable": true, "score": 5, "confidence": "medium", "summary": "Rewarded MB + banner + app-open is implemented; unit economics and paid ceiling are unproven", "why": "AdConfig defines rewarded MB (+25), timer extension, banner, and app-open units with maxDailyRewardedAds=4. CreditService syncs MB to a Worker. UMP consent exists. Model fits a free anonymous tool. No IAP/subscription path found, and app-open on cold start remains a policy and UX tax.", "why_not_higher": "Ship a collectible paid Top Up or remove/heavily gate app-open, then show labeled revenue ceiling with real eCPM or Play earnings. No reliable eCPM benchmark available from inputs.", "evidence": [{"input": "i3", "ref": "lib/config/ad_config.dart:1-28", "quote": "rewardedMBAmount = 25; maxDailyRewardedAds = 4; appOpen unit present"}, {"input": "i2", "ref": "lib/main.dart:68-90", "quote": "loadAndShowAppOpenAd after 2s delay when allowAppOpen"}, {"input": "i15", "ref": "ss5.png - bottom", "quote": "Banner ad slot visible on receive surface"}], "weighted_contribution": 6.0, "delta": null}, {"id": "visual", "name": "UI & Visual Design", "weight": 10, "weight_renormalized": 10.0, "applicable": true, "score": 6, "confidence": "high", "summary": "Consistent dark purple system; looks shipped, still familiar indie-glow territory", "why": "AppTheme defines a single accent (#7c3aed), Inter + Poppins, glass cards, and clear hierarchy. Screenshots show one primary Share CTA, readable white-on-dark body, and coherent upload/QR/receive cards. Brand mark is distinctive. The purple-glow dark look is common for privacy apps, so distinctiveness is moderate.", "why_not_higher": "Tighten uniqueness (less generic purple glow), verify AA on secondary grey labels across all screens, and keep ads visually separated from primary actions.", "evidence": [{"input": "i7", "ref": "lib/theme/app_theme.dart:5-40", "quote": "bgPrimary 0xFF0a0a0f; accent 0xFF7c3aed; Inter + Poppins"}, {"input": "i12", "ref": "ss2.png - home", "quote": "Blink wordmark, quota pill, upload card, single accent"}, {"input": "i14", "ref": "ss4.png - success", "quote": "QR card with countdown ring and clear File Uploaded state"}], "weighted_contribution": 6.0, "delta": null}, {"id": "ux", "name": "UX & Onboarding", "weight": 10, "weight_renormalized": 10.0, "applicable": true, "score": 7, "confidence": "high", "summary": "Fast path to share; onboarding and empty states exist; cold-start ads still interrupt", "why": "Home makes upload the center. Confirm screen exposes timer chips and Privacy Mode before Share. Success shows QR + countdown. Three-page onboarding; history has empty copy. App Open is skipped during first onboarding session and delayed 2s, which is careful, but returning users still risk a full-screen ad before the next share.", "why_not_higher": "Kill or further suppress app-open around share intents / mid-transfer, and prove offline and receive-error recovery with screenshots or measured drop-off.", "evidence": [{"input": "i9", "ref": "onboarding_screen.dart:28-32", "quote": "WelcomePage, HowItWorksPage, PrivacyQuotaPage"}, {"input": "i10", "ref": "history_empty_state.dart:15-16", "quote": "Nothing shared yet / Nothing received yet"}, {"input": "i2", "ref": "lib/main.dart:81-90", "quote": "never show App Open until next cold start after onboarding; then delay 2s"}], "weighted_contribution": 7.0, "delta": null}, {"id": "retention", "name": "Retention & Engagement", "weight": 12, "weight_renormalized": 12.0, "applicable": true, "score": 4, "confidence": "medium", "summary": "Ephemeral by design; return loops are weak beyond daily quota and history", "why": "Files vanish in minutes, so the product fights classic habit retention. History, default timer prefs, and daily 100MB credits give a light reason to reopen, but there is no durable personal corpus, social graph, or scheduled need. That is honest for the category, and still a growth risk if earn depends on DAU.", "why_not_higher": "Add a non-creepy return reason (saved recipients/folders of links, widgets for remaining MB, or clear share-from-other-apps habit) and measure D1/D7 from Console.", "evidence": [{"input": "i11", "ref": "README.md:7-11", "quote": "Auto-Expiry: Files vanish after 1-10 minutes"}, {"input": "i12", "ref": "ss2.png - quota", "quote": "100 / 100 MB; 100 MB free daily"}, {"input": "i6", "ref": "credit_service.dart:15-18", "quote": "Server-managed MB credits; local prefs write-through cache"}], "weighted_contribution": 4.8, "delta": null}, {"id": "growth", "name": "Growth & Distribution", "weight": 10, "weight_renormalized": 10.0, "applicable": true, "score": 6, "confidence": "medium", "summary": "Live listing + QR/link/share intents are real distribution; no Console proof of traction", "why": "Play listing is live with ads disclosure. Manifest registers SEND, SEND_MULTIPLE, and App Links to blink.darkmintis.workers.dev/b/. Success UX pushes QR. Marketing site and privacy page exist. Without installs, conversion, or ASO keyword evidence, growth quality stays inferred from surfaces, not results.", "why_not_higher": "Provide Play Console acquisition/store-listing conversion and a focused ASO pass; add one intentional invite or receive-to-install loop with measurement.", "evidence": [{"input": "i8", "ref": "AndroidManifest.xml:60-82", "quote": "App Links /b/ plus SEND and SEND_MULTIPLE"}, {"input": "i14", "ref": "ss4.png", "quote": "Scan QR to Download"}, {"input": "i16", "ref": "Play listing", "quote": "Blink: Anonymous File Sharing; Contains ads"}], "weighted_contribution": 6.0, "delta": null}, {"id": "technical", "name": "Technical Quality", "weight": 10, "weight_renormalized": 10.0, "applicable": true, "score": 7, "confidence": "high", "summary": "Strong feature-first Flutter + real encryption tests; ops observability thin", "why": "187 Dart lib files under feature folders; README encodes architecture rules. AES-256-GCM with checksum layout; encryption and upload services have unit tests (~45 test files). Foreground service for transfers; cleartextTraffic false. No Sentry/Crashlytics/Firebase Crashlytics in pubspec, so production crash signal is weak.", "why_not_higher": "Add crash reporting + breadcrumb coverage on upload/receive, and keep analyze/test green as release gates with evidence in CI.", "evidence": [{"input": "i5", "ref": "encryption_service.dart:7-14", "quote": "AES-256-GCM for authenticated encryption"}, {"input": "i1", "ref": "pubspec.yaml:1-70", "quote": "cryptography, google_mobile_ads, flutter_foreground_task; no crashlytics"}, {"input": "i11", "ref": "README.md Testing Rules", "quote": "Critical paths must stay covered: encryption, upload/link flow, receive flow"}], "weighted_contribution": 7.0, "delta": null}, {"id": "trust", "name": "Trust & Compliance", "weight": 6, "weight_renormalized": 6.0, "applicable": true, "score": 7, "confidence": "high", "summary": "E2E encryption, UMP, and a privacy page are real; consent fail-open and device IDs need honesty", "why": "Encryption is client-side AES-GCM. Manifest disables cleartext. ConsentService uses UMP and can open privacy options. Blink-site ships privacy.html. Play Data safety discloses device or other IDs shared with third parties (ads). CreditService sends X-Blink-Device-Id. Consent catch path returns true (ads allowed), which is a compliance sharpness issue.", "why_not_higher": "Fail closed (or non-personalized only) when UMP errors; document device-id purpose in-app; keep Data safety and policy text synced with rewarded/app-open behavior.", "evidence": [{"input": "i4", "ref": "consent_service.dart:68-72", "quote": "On error, assume non-EU and allow ads (graceful degradation)"}, {"input": "i8", "ref": "AndroidManifest.xml:25-26", "quote": "usesCleartextTraffic=false; networkSecurityConfig set"}, {"input": "i16", "ref": "Play Data safety", "quote": "Device or other IDs may be shared with third parties; encrypted in transit"}, {"input": "i17", "ref": "Blink-site/privacy.html", "quote": "Privacy Policy for Blink - Ephemeral File Sharing"}], "weighted_contribution": 4.2, "delta": null}, {"id": "polish", "name": "Polish & Store Readiness", "weight": 8, "weight_renormalized": 8.0, "applicable": true, "score": 7, "confidence": "high", "summary": "Live 2.1.0 product with release notes and edge-case hardening; still not spotless", "why": "Version 2.1.0+42, Play listing, branding frames, HEIC rejection notes, history badges, settings redesign called out in RELEASE_NOTES. History empty states exist. Branding receive screenshot still shows a Test Ad banner, which is fine for debug assets but signals ad surfaces sit on primary flows.", "why_not_higher": "Production screenshots without test ads, crash-free metrics, and a short store QA checklist for receive/privacy/burn paths would push this higher.", "evidence": [{"input": "i1", "ref": "pubspec.yaml:version", "quote": "version: 2.1.0+42"}, {"input": "i18", "ref": "RELEASE_NOTES.md", "quote": "HEIC uploads rejected early; Cancel and Share buttons scale on small screens"}, {"input": "i15", "ref": "ss5.png - footer", "quote": "Test Ad banner under Done CTA"}], "weighted_contribution": 5.6, "delta": null}], "overall": 60.8, "overall_delta": null, "evidence_coverage": 1.0, "verdict_band": "average", "verdict_band_label": "Average", "verdict_line": "Sharp privacy utility with real encryption and a live store presence, held back by cold-start ads, thin return loops, and no crash pipeline.", "findings": [{"key": "revenue/app-open-cold-start-tax", "category": "revenue", "severity": "major", "title": "App Open ads still fire on returning cold starts", "why": "After onboarding, main.dart delays 2 seconds then loads App Open. That protects first session, but every later cold start can cover the share surface users came for. For an ephemeral utility, that tax hits exactly when intent is highest.", "counterpoint": "App Open is a common AdMob pattern and is suppressed during onboarding and via suppressShow during transfers.", "evidence": [{"input": "i2", "ref": "lib/main.dart:81-90", "quote": "if (!allowAppOpen) return; delay 2s; loadAndShowAppOpenAd"}, {"input": "i3", "ref": "ad_config.dart:22-23", "quote": "App Open ad (shown on cold start)"}], "fix": "Show App Open only after a completed share or on a long session gap; never when a SEND intent or deep link is pending.", "effort": "S", "impact": "H", "status": "new", "priority": 9.0}, {"key": "retention/ephemeral-weak-return-loop", "category": "retention", "severity": "major", "title": "Product deletes the reason to return", "why": "Minute-scale expiry is the brand. History and daily MB are light hooks. Earn models that need daily opens will struggle without a deliberate, privacy-safe return loop.", "counterpoint": "Many file-transfer tools are intentional infrequent-use utilities; retention may matter less than share completion rate.", "evidence": [{"input": "i11", "ref": "README.md:10-11", "quote": "Auto-Expiry: Files vanish after 1-10 minutes"}, {"input": "i12", "ref": "ss2.png", "quote": "100 MB free daily"}], "fix": "Pick one return mechanic that does not store file contents (MB widget, last-share resume, or share-sheet education) and track D1/D7.", "effort": "M", "impact": "H", "status": "new", "priority": 4.5}, {"key": "technical/no-crash-reporter", "category": "technical", "severity": "major", "title": "No crash reporting package in the shipped app", "why": "pubspec has ads, encryption, foreground tasks, and webviews, but no Crashlytics/Sentry. Live Android apps with background transfers will fail silently for most users.", "counterpoint": "Ferret/Mole help local debugging; they are not a production crash pipeline.", "evidence": [{"input": "i1", "ref": "pubspec.yaml dependencies", "quote": "google_mobile_ads present; no firebase_crashlytics or sentry"}, {"input": "i2", "ref": "lib/main.dart:42-48", "quote": "Ferret.install(); Mole.install(enableInRelease: false)"}], "fix": "Add a crash reporter with upload/receive breadcrumbs and a release blocker on new crash-free regressions.", "effort": "M", "impact": "H", "status": "new", "priority": 4.5}, {"key": "trust/consent-fail-open", "category": "trust", "severity": "major", "title": "UMP errors fail open to personalized ads", "why": "ConsentService.checkAndRequestConsent catches errors and returns true, allowing ads. That is convenient and weak for GDPR sharpness when the form path fails.", "counterpoint": "Non-EU users may never see a form; failing open keeps UX working when Google UMP is flaky.", "evidence": [{"input": "i4", "ref": "consent_service.dart:68-72", "quote": "On error, assume non-EU and allow ads (graceful degradation)"}], "fix": "On UMP failure, initialize ads as non-personalized only (or delay ads) until status is known.", "effort": "S", "impact": "H", "status": "new", "priority": 9.0}, {"key": "revenue/no-direct-paid-path", "category": "revenue", "severity": "minor", "title": "Top Up is ad-only; no direct paid MB path", "why": "README and UI sell Top Up via rewarded ads. CreditService is MB/adsToday. Users who hate ads have no clean pay escape, which caps ARPU and can raise frustration on a privacy-branded app.", "counterpoint": "Anonymous no-login products often avoid Play Billing identity friction on purpose.", "evidence": [{"input": "i11", "ref": "README.md Monetization", "quote": "Bonus: Watch ads for +25 MB"}, {"input": "i12", "ref": "ss2.png", "quote": "Top Up button beside quota"}], "fix": "Add a small Play Billing MB pack or ad-free day pass if billing is available; otherwise rename Top Up so it does not imply purchase.", "effort": "L", "impact": "M", "status": "new", "priority": 1.3333}, {"key": "visual/banner-on-primary-flow", "category": "visual", "severity": "minor", "title": "Banner sits on the receive completion surface", "why": "ss5 shows a banner under the Done CTA on a success/receive screen. Even if policy-legal, it competes with the one job of that screen.", "counterpoint": "Anchored banners are standard; rewarded ads are the heavier lift for quota.", "evidence": [{"input": "i15", "ref": "ss5.png - bottom", "quote": "Test Ad banner beneath Done"}], "fix": "Keep banners on Settings/History, not on QR success or receive Done screens.", "effort": "S", "impact": "M", "status": "new", "priority": 4.0}, {"key": "growth/missing-console-exports", "category": "growth", "severity": "nit", "title": "No Play Console export in this review", "why": "Distribution surfaces look good, but installs, store conversion, and ratings were not evidenced from Console. Growth score cannot honestly rise without them.", "counterpoint": "Public listing proves the app is shipped; metrics can arrive in v2.", "evidence": [{"input": "i16", "ref": "Play listing fetch", "quote": "Listing readable; no installs/rating figures captured in review inputs"}], "fix": "Drop a Play Console overview CSV into MasterG/inputs for v2.", "effort": "S", "impact": "L", "status": "new", "priority": 1.0}], "fix_first": [{"key": "revenue/app-open-cold-start-tax", "title": "App Open ads still fire on returning cold starts", "category": "revenue", "severity": "major", "effort": "S", "impact": "H", "priority": 9.0}, {"key": "trust/consent-fail-open", "title": "UMP errors fail open to personalized ads", "category": "trust", "severity": "major", "effort": "S", "impact": "H", "priority": 9.0}, {"key": "retention/ephemeral-weak-return-loop", "title": "Product deletes the reason to return", "category": "retention", "severity": "major", "effort": "M", "impact": "H", "priority": 4.5}], "strengths": [{"title": "Real client-side AES-256-GCM, not marketing-only crypto", "evidence": [{"input": "i5", "ref": "encryption_service.dart:7-48", "quote": "AesGcm.with256bits; SHA-256 checksum inside encrypted payload"}]}, {"title": "Privacy Mode and Instant burn as exclusive share modes", "evidence": [{"input": "i18", "ref": "RELEASE_NOTES.md:1-3", "quote": "Exclusive share modes: Privacy or Instant burn"}, {"input": "i13", "ref": "ss3.png", "quote": "Privacy Mode toggle on confirm card"}]}, {"title": "Ad consent and first-session App Open gating are thought through", "evidence": [{"input": "i2", "ref": "lib/main.dart:65-84", "quote": "allowAppOpen decided at cold start; never App Open during onboarding session"}, {"input": "i4", "ref": "consent_service.dart:1-10", "quote": "Uses Google UMP SDK for GDPR"}]}], "metrics": [], "metric_deltas": [], "previous_findings_review": [], "calibration_note": "First review mean of verified scores is about 6.2 (range 4-7), intentionally below the >7 warning. Retention scored 4 because ephemerality fights DAU by design. Revenue kept at 5 despite solid AdMob plumbing because app-open tax and missing paid path limit earn credibility. No Play Console metrics; growth/revenue confidence capped at medium where comps exist but economics do not.", "warnings": []}], "older_summaries": [], "history": [{"version": 1, "date": "2026-11-18", "overall": 60.8, "evidence_coverage": 1.0, "verdict_band": "average", "key_metrics": {}}]}</script>
+<script>
+(function () {
+  function syncThemeButtons() {
+    const theme = document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
+    const lightBtn = document.getElementById("theme-light");
+    const darkBtn = document.getElementById("theme-dark");
+    if (!lightBtn || !darkBtn) return;
+    lightBtn.setAttribute("aria-pressed", theme === "light" ? "true" : "false");
+    darkBtn.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+  }
+  function setTheme(theme) {
+    const next = theme === "dark" ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", next);
+    try { localStorage.setItem("masterg-theme", next); } catch (e) {}
+    syncThemeButtons();
+  }
+  document.getElementById("theme-light").addEventListener("click", () => setTheme("light"));
+  document.getElementById("theme-dark").addEventListener("click", () => setTheme("dark"));
+  syncThemeButtons();
+
+  const raw = document.getElementById("masterg-data").textContent;
+  let payload;
+  try { payload = JSON.parse(raw); } catch (e) { payload = { versions: [], history: [] }; }
+
+  const versions = payload.versions || [];
+  const history = payload.history || versions.map(v => ({
+    version: v.version, date: (v.created_at || "").slice(0, 10),
+    overall: v.overall, evidence_coverage: v.evidence_coverage, verdict_band: v.verdict_band
+  }));
+
+  let current = versions.find(v => v.version === payload.latest_version) || versions[versions.length - 1];
+
+  /** Latte → mocha → espresso. Number always printed; bar uses ramp. Dark flips via CSS vars. */
+  function scoreTokens(score) {
+    if (score == null) {
+      return { bar: "var(--line)", ink: "var(--muted)", fill: "var(--score-track)" };
+    }
+    if (score <= 3) {
+      return { bar: "var(--score-latte)", ink: "var(--muted)", fill: "var(--score-latte)" };
+    }
+    if (score <= 6) {
+      return {
+        bar: "var(--score-mocha)",
+        ink: "var(--score-mocha-text)",
+        fill: "var(--score-mocha)"
+      };
+    }
+    return {
+      bar: "var(--score-espresso)",
+      ink: "var(--score-espresso)",
+      fill: "var(--score-espresso)"
+    };
+  }
+
+  function overallFill(overall) {
+    if (overall == null) return "var(--score-track)";
+    if (overall < 35) return "var(--score-latte)";
+    if (overall < 50) return "var(--score-mocha)";
+    if (overall < 65) return "var(--score-mocha)";
+    return "var(--score-espresso)";
+  }
+
+  function deltaHtml(d) {
+    if (d == null || d === 0) return '<span class="delta flat">0</span>';
+    const cls = d > 0 ? "up" : "down";
+    const sign = d > 0 ? "+" : "";
+    return `<span class="delta ${cls}">${sign}${d}</span>`;
+  }
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function evidenceList(ev) {
+    if (!ev || !ev.length) return "<p class='submeta'>No evidence cited.</p>";
+    return "<ul class='ev'>" + ev.map(e =>
+      `<li><strong>${esc(e.ref)}</strong> - ${esc(e.quote)}</li>`
+    ).join("") + "</ul>";
+  }
+
+  function sevLabel(sev) {
+    const map = { critical: "Critical", major: "Major", minor: "Minor", nit: "Nit" };
+    return map[sev] || sev;
+  }
+
+  function renderHeader() {
+    document.getElementById("product-name").textContent = current.product.name;
+    document.title = `MasterG - ${current.product.name} v${current.version}`;
+    document.getElementById("meta-chips").innerHTML = `
+      <span class="chip">v${esc(current.version)}</span>
+      <span class="chip muted">${esc((current.created_at || "").slice(0, 10))}</span>
+      <span class="chip muted">${esc(current.product.type)}</span>
+      <span class="chip muted">${esc(current.product.stage)}</span>`;
+
+    const overall = current.overall;
+    const ring = document.getElementById("score-ring");
+    const num = document.getElementById("overall-num");
+    const band = document.getElementById("overall-band");
+    if (overall == null) {
+      ring.style.setProperty("--p", 0);
+      ring.style.setProperty("--ring-fill", "var(--score-track)");
+      num.textContent = "-";
+      band.textContent = "Insufficient evidence";
+    } else {
+      ring.style.setProperty("--p", overall);
+      ring.style.setProperty("--ring-fill", overallFill(overall));
+      num.textContent = String(overall);
+      band.textContent = current.verdict_band_label || "";
+    }
+    document.getElementById("verdict-line").textContent = current.verdict_line || "";
+    const cov = Math.round((current.evidence_coverage || 0) * 100);
+    document.getElementById("submeta").innerHTML =
+      `Evidence coverage <strong>${cov}%</strong>` +
+      (current.overall_delta != null ? ` · ${deltaHtml(current.overall_delta)} vs previous` : "") +
+      (overall == null
+        ? ` <div class="insufficient" style="margin-top:10px">Insufficient evidence for an overall score. Add screenshots, exports, or broader code coverage.</div>`
+        : "");
+  }
+
+  function renderCategories() {
+    const grid = document.getElementById("category-grid");
+    grid.innerHTML = "";
+    (current.scores || []).forEach((s, idx) => {
+      const unverified = !s.applicable || s.score == null || s.confidence === "unverified";
+      const tok = scoreTokens(unverified ? null : s.score);
+      const tile = document.createElement("article");
+      tile.className = "tile" + (unverified ? " unverified" : "");
+      tile.style.setProperty("--i", String(idx));
+      tile.style.setProperty("--score-bar", tok.bar);
+      tile.style.setProperty("--score-ink", tok.ink);
+      const scoreLabel = !s.applicable ? "n/a" : (s.score == null ? "-" : `${s.score}/10`);
+      tile.innerHTML = `
+        <div class="tile-top">
+          <div class="tile-name">${esc(s.name)}</div>
+          <div class="tile-score">${esc(scoreLabel)}</div>
+        </div>
+        <div class="tile-summary">${esc(unverified ? (s.applicable === false ? "Not applicable for this product type." : "Unverified - needs evidence.") : s.summary)}</div>
+        <div class="tile-actions">
+          <span class="submeta">${s.delta != null ? deltaHtml(s.delta) : ""}${s.confidence && s.applicable ? ` · ${esc(s.confidence)}` : ""}</span>
+          <button class="details" type="button" aria-expanded="false" data-idx="${idx}">Details</button>
+        </div>
+        <div class="drawer" id="drawer-${idx}"><div class="drawer-inner"></div></div>`;
+      grid.appendChild(tile);
+      const btn = tile.querySelector("button.details");
+      const drawer = tile.querySelector(".drawer");
+      const inner = tile.querySelector(".drawer-inner");
+      const cat = (current.categories || []).find(c => c.id === s.id) || s;
+      const findings = (current.findings || []).filter(f => f.category === s.id);
+      inner.innerHTML = `
+        <h3>Why this score</h3><p>${esc(cat.why || s.why || "-")}</p>
+        <h3>Why not higher</h3><p>${esc(cat.why_not_higher || s.why_not_higher || "-")}</p>
+        <h3>Evidence</h3>${evidenceList(cat.evidence || s.evidence)}
+        <h3>Findings in this category</h3>
+        ${findings.length ? findings.map(f => findingCard(f)).join("") : "<p class='submeta'>None.</p>"}`;
+      btn.addEventListener("click", () => {
+        const open = btn.getAttribute("aria-expanded") === "true";
+        btn.setAttribute("aria-expanded", open ? "false" : "true");
+        drawer.classList.toggle("open", !open);
+      });
+    });
+  }
+
+  function findingCard(f) {
+    return `<article class="card" data-severity="${esc(f.severity)}" data-status="${esc(f.status || "new")}">
+      <div class="tile-top">
+        <span class="sev ${esc(f.severity)}">${esc(sevLabel(f.severity))}</span>
+        <span class="chip muted">${esc(f.status || "new")} · ${esc(f.effort)}/${esc(f.impact)}</span>
+      </div>
+      <h3>${esc(f.title)}</h3>
+      <p><strong>Why:</strong> ${esc(f.why)}</p>
+      <p><strong>Counterpoint:</strong> ${esc(f.counterpoint)}</p>
+      <p><strong>Fix:</strong> ${esc(f.fix)}</p>
+      ${evidenceList(f.evidence)}
+      <p class="submeta">${esc(f.key)}</p>
+    </article>`;
+  }
+
+  function renderFixFirst() {
+    const el = document.getElementById("fix-first");
+    const items = current.fix_first || [];
+    if (!items.length) { el.innerHTML = "<p class='submeta'>No open findings ranked.</p>"; return; }
+    el.innerHTML = items.map(f => {
+      const full = (current.findings || []).find(x => x.key === f.key) || f;
+      return `<article class="card">
+        <div class="tile-top">
+          <span class="sev ${esc(f.severity)}">${esc(sevLabel(f.severity))}</span>
+          <span class="chip muted">effort ${esc(f.effort)} · impact ${esc(f.impact)}</span>
+        </div>
+        <h3>${esc(f.title)}</h3>
+        <p class="submeta">${esc(f.category)}</p>
+        ${full.fix ? `<p><strong>Fix:</strong> ${esc(full.fix)}</p>` : ""}
+      </article>`;
+    }).join("");
+  }
+
+  function renderStrengths() {
+    const el = document.getElementById("strengths");
+    const items = current.strengths || [];
+    el.innerHTML = items.length
+      ? items.map(s => `<div class="strength">${esc(s.title)}</div>`).join("")
+      : "<p class='submeta'>No evidenced strengths recorded.</p>";
+  }
+
+  function renderFindings() {
+    document.getElementById("findings-list").innerHTML =
+      (current.findings || []).map(findingCard).join("") || "<p class='submeta'>No findings.</p>";
+    applyFilters();
+  }
+
+  function applyFilters() {
+    const sev = document.getElementById("filter-severity").dataset.value || "all";
+    const st = document.getElementById("filter-status").dataset.value || "open";
+    let visible = 0;
+    document.querySelectorAll("#findings-list .card").forEach(card => {
+      const okSev = sev === "all" || card.dataset.severity === sev;
+      const status = card.dataset.status;
+      let okSt = true;
+      if (st === "open") okSt = ["new", "persisting", "regressed"].includes(status);
+      else if (st !== "all") okSt = status === st;
+      const show = okSev && okSt;
+      card.style.display = show ? "" : "none";
+      if (show) visible += 1;
+    });
+    let empty = document.getElementById("findings-empty");
+    if (!empty) {
+      empty = document.createElement("p");
+      empty.id = "findings-empty";
+      empty.className = "submeta";
+      document.getElementById("findings-list").appendChild(empty);
+    }
+    empty.textContent = visible ? "" : "No findings match these filters.";
+    empty.style.display = visible ? "none" : "block";
+  }
+
+  function closeAllDropdowns(except) {
+    document.querySelectorAll(".dd.open").forEach(dd => {
+      if (except && dd === except) return;
+      dd.classList.remove("open");
+      const trigger = dd.querySelector(".dd-trigger");
+      const menu = dd.querySelector(".dd-menu");
+      if (trigger) trigger.setAttribute("aria-expanded", "false");
+      if (menu) menu.hidden = true;
+    });
+  }
+
+  function initDropdowns() {
+    document.querySelectorAll(".filters .dd").forEach(dd => {
+      const trigger = dd.querySelector(".dd-trigger");
+      const menu = dd.querySelector(".dd-menu");
+      const label = dd.querySelector(".dd-label");
+      if (!trigger || !menu || !label) return;
+      const options = () => Array.from(menu.querySelectorAll(".dd-option"));
+
+      function openMenu() {
+        closeAllDropdowns();
+        dd.classList.add("open");
+        trigger.setAttribute("aria-expanded", "true");
+        menu.hidden = false;
+        const selected = options().find(o => o.getAttribute("aria-selected") === "true") || options()[0];
+        if (selected) selected.focus();
+      }
+      function choose(opt) {
+        dd.dataset.value = opt.getAttribute("data-value");
+        label.textContent = opt.textContent.trim();
+        options().forEach(o => o.setAttribute("aria-selected", o === opt ? "true" : "false"));
+        closeAllDropdowns();
+        trigger.focus();
+        applyFilters();
+      }
+
+      trigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (dd.classList.contains("open")) closeAllDropdowns();
+        else openMenu();
+      });
+      trigger.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openMenu();
+        }
+      });
+      options().forEach((opt, idx) => {
+        opt.addEventListener("click", (e) => {
+          e.stopPropagation();
+          choose(opt);
+        });
+        opt.addEventListener("keydown", (e) => {
+          const list = options();
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            list[Math.min(idx + 1, list.length - 1)].focus();
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            list[Math.max(idx - 1, 0)].focus();
+          } else if (e.key === "Home") {
+            e.preventDefault();
+            list[0].focus();
+          } else if (e.key === "End") {
+            e.preventDefault();
+            list[list.length - 1].focus();
+          } else if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            choose(opt);
+          } else if (e.key === "Escape") {
+            e.preventDefault();
+            closeAllDropdowns();
+            trigger.focus();
+          }
+        });
+      });
+    });
+
+    document.addEventListener("click", () => closeAllDropdowns());
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeAllDropdowns();
+    });
+  }
+
+  function scoreBandClass(score) {
+    if (score == null) return "low";
+    if (score <= 3) return "low";
+    if (score <= 6) return "mid";
+    return "high";
+  }
+
+  function openFindings() {
+    return (current.findings || []).filter(f =>
+      ["new", "persisting", "regressed"].includes(f.status || "new")
+    );
+  }
+
+  function renderCategoryBars(targetId) {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const scores = (current.scores || []).filter(s => s.applicable !== false);
+    if (!scores.length) {
+      el.innerHTML = "<p class='chart-empty'>No category scores.</p>";
+      return;
+    }
+    el.innerHTML = scores.map(s => {
+      const score = s.score;
+      const pct = score == null ? 0 : score * 10;
+      const label = score == null ? "-" : `${score}/10`;
+      return `<div class="hbar-row" title="${esc(s.name)}">
+        <div class="name">${esc(s.name)}</div>
+        <div class="hbar-track"><div class="hbar-fill ${scoreBandClass(score)}" data-width="${pct}"></div></div>
+        <div class="hbar-score">${esc(label)}</div>
+      </div>`;
+    }).join("");
+  }
+
+  function renderFindingsDonut(targetId) {
+    const el = document.getElementById(targetId);
+    if (!el) return;
+    const open = openFindings();
+    const counts = { critical: 0, major: 0, minor: 0, nit: 0 };
+    open.forEach(f => { if (counts[f.severity] != null) counts[f.severity] += 1; });
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    if (!total) {
+      el.innerHTML = "<p class='chart-empty'>No open findings.</p>";
+      return;
+    }
+    const colors = {
+      critical: "var(--sev-critical)",
+      major: "var(--sev-major)",
+      minor: "var(--sev-minor)",
+      nit: "var(--muted)"
+    };
+    const r = 54, cx = 70, cy = 70, stroke = 16;
+    const C = 2 * Math.PI * r;
+    let offset = 0;
+    const arcs = ["critical", "major", "minor", "nit"].map(k => {
+      const n = counts[k];
+      if (!n) return "";
+      const len = (n / total) * C;
+      const circle = `<circle class="donut-arc" cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${colors[k]}" stroke-width="${stroke}"
+        stroke-dasharray="0 ${C}" data-len="${len}" data-gap="${C - len}" stroke-dashoffset="${-offset}"
+        transform="rotate(-90 ${cx} ${cy})"></circle>`;
+      offset += len;
+      return circle;
+    }).join("");
+    el.innerHTML = `
+      <svg class="chart-svg" viewBox="0 0 200 140" role="img" aria-label="Open findings by severity">
+        <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--score-track)" stroke-width="${stroke}"></circle>
+        ${arcs}
+        <text x="${cx}" y="${cy - 2}" text-anchor="middle" class="bar-score" style="font-size:18px">${total}</text>
+        <text x="${cx}" y="${cy + 14}" text-anchor="middle" class="axis-label">open</text>
+      </svg>
+      <div class="chart-legend">
+        ${["critical", "major", "minor", "nit"].map(k =>
+          counts[k] ? `<span><i style="background:${colors[k]}"></i>${k} ${counts[k]}</span>` : ""
+        ).join("")}
+      </div>`;
+  }
+
+  function renderOverallLine() {
+    const el = document.getElementById("chart-overall-line");
+    if (!el) return;
+    const hist = history.slice().sort((a, b) => a.version - b.version);
+    const points = hist.filter(h => h.overall != null);
+    if (points.length < 1) {
+      el.innerHTML = "<p class='chart-empty'>No overall scores yet.</p>";
+      return;
+    }
+    const w = 640, h = 200, pad = { t: 20, r: 20, b: 36, l: 40 };
+    const innerW = w - pad.l - pad.r;
+    const innerH = h - pad.t - pad.b;
+    const xs = points.map((_, i) => pad.l + (points.length === 1 ? innerW / 2 : (i / (points.length - 1)) * innerW));
+    const ys = points.map(p => pad.t + innerH - (p.overall / 100) * innerH);
+    const line = points.map((p, i) => `${i ? "L" : "M"}${xs[i]},${ys[i]}`).join(" ");
+    const area = `${line} L${xs[xs.length - 1]},${pad.t + innerH} L${xs[0]},${pad.t + innerH} Z`;
+    const grid = [0, 25, 50, 75, 100].map(v => {
+      const y = pad.t + innerH - (v / 100) * innerH;
+      return `<line class="grid-line" x1="${pad.l}" x2="${w - pad.r}" y1="${y}" y2="${y}"></line>
+        <text class="axis-label" x="${pad.l - 8}" y="${y + 3}" text-anchor="end">${v}</text>`;
+    }).join("");
+    const dots = points.map((p, i) =>
+      `<circle class="dot" cx="${xs[i]}" cy="${ys[i]}" r="4">
+        <title>v${p.version}: ${p.overall}</title>
+      </circle>
+      <text class="axis-label" x="${xs[i]}" y="${h - 12}" text-anchor="middle">v${p.version}</text>`
+    ).join("");
+    el.innerHTML = `<svg class="chart-svg" viewBox="0 0 ${w} ${h}" role="img" aria-label="Overall score trend">
+      ${grid}
+      <path class="series-area" d="${area}"></path>
+      <path class="series" d="${line}"></path>
+      ${dots}
+    </svg>`;
+  }
+
+  function renderCategorySparks() {
+    const el = document.getElementById("chart-category-sparks");
+    if (!el) return;
+    if (versions.length < 2) {
+      el.innerHTML = "<p class='chart-empty'>Need v2+ for category sparklines.</p>";
+      return;
+    }
+    const ids = (current.scores || []).filter(s => s.applicable !== false).map(s => s.id);
+    el.innerHTML = ids.map(id => {
+      const name = (current.scores.find(s => s.id === id) || {}).name || id;
+      const series = versions.map(v => {
+        const s = (v.scores || []).find(x => x.id === id);
+        return s && s.score != null ? s.score : null;
+      });
+      const valid = series.map((v, i) => v == null ? null : { i, v }).filter(Boolean);
+      if (valid.length < 1) return "";
+      const w = 160, h = 28, pad = 3;
+      const pts = valid.map(p => {
+        const x = pad + (p.i / Math.max(versions.length - 1, 1)) * (w - pad * 2);
+        const y = pad + (1 - p.v / 10) * (h - pad * 2);
+        return `${x},${y}`;
+      });
+      const d = pts.map((p, i) => `${i ? "L" : "M"}${p}`).join(" ");
+      const last = series[series.length - 1];
+      const first = series.find(v => v != null);
+      const delta = last != null && first != null ? last - first : null;
+      const deltaLabel = delta == null ? "-" : `${delta > 0 ? "+" : ""}${delta}`;
+      return `<div class="spark-row">
+        <div class="name">${esc(name)}</div>
+        <svg viewBox="0 0 ${w} ${h}" aria-hidden="true"><path class="series" d="${d}" stroke-width="2"></path></svg>
+        <div class="hbar-score">${esc(deltaLabel)}</div>
+      </div>`;
+    }).join("") || "<p class='chart-empty'>No sparkline data.</p>";
+  }
+
+  function renderFindingsStatus() {
+    const el = document.getElementById("chart-findings-status");
+    if (!el) return;
+    const all = current.findings || [];
+    const counts = { new: 0, persisting: 0, resolved: 0, regressed: 0 };
+    all.forEach(f => {
+      const st = f.status || "new";
+      if (counts[st] != null) counts[st] += 1;
+    });
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    if (!total) {
+      el.innerHTML = "<p class='chart-empty'>No findings in this version.</p>";
+      return;
+    }
+    const order = ["new", "persisting", "regressed", "resolved"];
+    const colors = {
+      new: "var(--accent-text)",
+      persisting: "var(--sev-major)",
+      regressed: "var(--sev-critical)",
+      resolved: "var(--muted)"
+    };
+    el.innerHTML = order.map(k => {
+      const n = counts[k];
+      const pct = Math.round((n / total) * 100);
+      return `<div class="hbar-row">
+        <div class="name">${k}</div>
+        <div class="hbar-track"><div class="hbar-fill" data-width="${pct}" style="background:${colors[k]}"></div></div>
+        <div class="hbar-score">${n}</div>
+      </div>`;
+    }).join("");
+  }
+
+  function renderMetricsChart() {
+    const el = document.getElementById("chart-metrics");
+    if (!el) return;
+    const rows = (current.metric_deltas || []).filter(m => m.status === "compared" && m.delta_abs != null);
+    if (!rows.length) {
+      el.innerHTML = "<h3>Metric deltas</h3><p class='chart-empty'>No comparable metric deltas yet.</p>";
+      return;
+    }
+    const maxAbs = Math.max(...rows.map(m => Math.abs(m.delta_abs)), 1);
+    el.innerHTML = `<h3>Metric deltas</h3>` + rows.map(m => {
+      const pct = Math.round((Math.abs(m.delta_abs) / maxAbs) * 100);
+      const sign = m.delta_abs > 0 ? "+" : "";
+      const color = m.delta_abs >= 0 ? "var(--accent-text)" : "var(--sev-critical)";
+      return `<div class="hbar-row">
+        <div class="name">${esc(m.name)}</div>
+        <div class="hbar-track"><div class="hbar-fill" data-width="${pct}" style="background:${color}"></div></div>
+        <div class="hbar-score">${sign}${esc(m.delta_abs)}</div>
+      </div>`;
+    }).join("");
+  }
+
+  function animateChartsIn() {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    requestAnimationFrame(() => {
+      document.querySelectorAll(".hbar-fill[data-width]").forEach((bar, i) => {
+        const w = bar.getAttribute("data-width") || "0";
+        if (reduce) {
+          bar.style.width = w + "%";
+          return;
+        }
+        bar.style.width = "0%";
+        setTimeout(() => { bar.style.width = w + "%"; }, 40 + i * 35);
+      });
+      document.querySelectorAll(".donut-arc").forEach((arc, i) => {
+        const len = arc.getAttribute("data-len") || "0";
+        const gap = arc.getAttribute("data-gap") || "0";
+        if (reduce) {
+          arc.setAttribute("stroke-dasharray", `${len} ${gap}`);
+          return;
+        }
+        arc.setAttribute("stroke-dasharray", `0 ${Number(len) + Number(gap)}`);
+        setTimeout(() => {
+          arc.setAttribute("stroke-dasharray", `${len} ${gap}`);
+        }, 60 + i * 80);
+      });
+      document.querySelectorAll(".chart-svg .series, .chart-svg .series-area, .chart-svg .dot").forEach((node, i) => {
+        if (reduce) {
+          node.classList.add("is-drawn");
+          return;
+        }
+        setTimeout(() => node.classList.add("is-drawn"), 80 + i * 40);
+      });
+    });
+  }
+
+  function renderCharts() {
+    renderCategoryBars("chart-category-bars");
+    renderFindingsDonut("chart-findings-donut");
+    renderOverallLine();
+    renderCategorySparks();
+    renderFindingsStatus();
+    renderMetricsChart();
+    animateChartsIn();
+  }
+
+  function initExportPdf() {
+    const btn = document.getElementById("btn-export-pdf");
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+      window.print();
+    });
+  }
+
+  function renderProgress() {
+    const bars = document.getElementById("progress-bars");
+    const hist = history.slice().sort((a, b) => a.version - b.version);
+    bars.innerHTML = hist.map(h => {
+      const o = h.overall == null ? 0 : h.overall;
+      const hgt = Math.max(6, Math.round(o * 0.7));
+      const fill = overallFill(h.overall);
+      const label = h.overall == null ? "-" : String(h.overall);
+      return `<div class="col"><div class="bar" style="height:${hgt}px;background:${fill};opacity:${h.overall == null ? .3 : 1}" title="${esc(label)}"></div><div class="lbl">v${esc(h.version)} · ${esc(label)}</div></div>`;
+    }).join("") || "<p class='submeta'>One version so far.</p>";
+
+    const sw = document.getElementById("version-switcher");
+    sw.innerHTML = versions.map(v =>
+      `<button type="button" class="chip ${v.version === current.version ? "" : "muted"}" data-v="${v.version}">v${v.version}</button>`
+    ).join("");
+    sw.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        current = versions.find(x => x.version === Number(btn.getAttribute("data-v"))) || current;
+        renderAll();
+      });
+    });
+
+    const rows = current.metric_deltas || [];
+    document.getElementById("metrics-body").innerHTML = rows.length
+      ? rows.map(m => {
+          const d = m.delta_abs == null ? "-" : (m.delta_abs > 0 ? "+" : "") + m.delta_abs;
+          return `<tr><td>${esc(m.name)}</td><td>${esc(m.value)}</td><td>${esc(m.previous_value == null ? "-" : m.previous_value)}</td><td>${esc(d)}</td><td>${esc(m.status)}</td></tr>`;
+        }).join("")
+      : `<tr><td colspan="5">No metrics recorded.</td></tr>`;
+
+    renderCharts();
+  }
+
+  function renderFooter() {
+    const c = current.coverage || {};
+    const assumptions = (current.assumptions || []).map(a => `<li>${esc(a)}</li>`).join("") || "<li>None stated.</li>";
+    document.getElementById("footer").innerHTML = `
+      <div><strong style="color:var(--ink)">Coverage</strong> -
+        files ${esc(c.files_reviewed)}/${esc(c.files_total)},
+        screenshots ${esc(c.screenshots)},
+        exports ${esc(c.exports)},
+        web access ${c.web_access ? "yes" : "no"}
+        ${c.notes ? ` · ${esc(c.notes)}` : ""}
+      </div>
+      <div style="margin-top:8px"><strong style="color:var(--ink)">Assumptions</strong>
+        <ul class="assumptions">${assumptions}</ul>
+      </div>
+      <div style="margin-top:8px">Rubric ${esc(current.rubric_version)} · MasterG offline report · same layout for every product</div>`;
+  }
+
+  function renderAll() {
+    renderHeader();
+    renderCategories();
+    renderFixFirst();
+    renderStrengths();
+    renderFindings();
+    renderProgress();
+    renderFooter();
+  }
+
+  [
+    ["tab-summary", "panel-summary"],
+    ["tab-findings", "panel-findings"],
+    ["tab-progress", "panel-progress"],
+  ].forEach(([tid, pid]) => {
+    document.getElementById(tid).addEventListener("click", () => {
+      ["tab-summary", "tab-findings", "tab-progress"].forEach(t => {
+        document.getElementById(t).setAttribute("aria-selected", t === tid ? "true" : "false");
+      });
+      ["panel-summary", "panel-findings", "panel-progress"].forEach(p => {
+        document.getElementById(p).hidden = p !== pid;
+      });
+      if (pid === "panel-summary" || pid === "panel-progress") {
+        // Re-run grow animation when charts become visible
+        document.querySelectorAll(".hbar-fill[data-width]").forEach(bar => { bar.style.width = "0%"; });
+        document.querySelectorAll(".chart-svg .series, .chart-svg .series-area, .chart-svg .dot").forEach(n => {
+          n.classList.remove("is-drawn");
+        });
+        document.querySelectorAll(".donut-arc").forEach(arc => {
+          const len = Number(arc.getAttribute("data-len") || 0);
+          const gap = Number(arc.getAttribute("data-gap") || 0);
+          arc.setAttribute("stroke-dasharray", `0 ${len + gap}`);
+        });
+        animateChartsIn();
+      }
+    });
+  });
+  initDropdowns();
+  initExportPdf();
+
+  if (!current) {
+    document.getElementById("product-name").textContent = "No data";
+    document.getElementById("verdict-line").textContent = "Run masterg.py finalize to generate a report.";
+    return;
+  }
+  renderAll();
+})();
+</script>
+</body>
+</html>
