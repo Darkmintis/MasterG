@@ -1,4 +1,8 @@
-# MasterG
+<h1 align="center">MasterG</h1>
+
+<p align="center">
+  <code>npx skills add Darkmintis/MasterG</code>
+</p>
 
 <p align="center">
   <img src="docs/screenshots/report-desktop.png" alt="MasterG sample report for Blink" width="900">
@@ -16,10 +20,19 @@ Keywords: AI app review, app audit, Play Console report analysis, indie app feed
 
 ## Install
 
-Copy the self-contained skill folder into your agent's skills directory:
+Same one-liner as above (via the [skills](https://skills.sh) CLI). Useful variants:
 
 ```bash
-# from this repo
+# Global install (all projects)
+npx skills add Darkmintis/MasterG -g
+
+# Non-interactive: skill + all detected agents
+npx skills add Darkmintis/MasterG --skill masterg --all
+```
+
+Manual copy if you prefer:
+
+```bash
 cp -R skills/masterg <skills-root>/masterg
 ```
 
@@ -32,7 +45,7 @@ cp -R skills/masterg <skills-root>/masterg
 
 Only `skills/masterg/` is required. It does not depend on the rest of this repo.
 
-**Requirement:** Python **3.9+** on the machine where `scripts/masterg.py` runs (stdlib only, no network, no pip deps).
+**Requirement:** Python **3.9+** on the machine where `scripts/masterg.py` runs (stdlib only, no network, no pip deps). Node.js is only needed for the `npx skills` installer.
 
 ---
 
