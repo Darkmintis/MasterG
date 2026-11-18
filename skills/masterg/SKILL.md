@@ -20,6 +20,17 @@ Honest product review with a fixed rubric, evidence-backed scores, and versioned
 
 This skill folder is self-contained. Paths below are relative to it.
 
+## Prerequisites (once per machine)
+
+`scripts/masterg.py` needs **Python 3.9+** (stdlib only). Before the first `status` / `finalize` in a session:
+
+1. Run `python3 --version` (or `python --version`). Accept 3.9+.
+2. If missing or too old: install the smallest usual option for the OS (`apt`/`dnf`/`brew`/`winget`/`choco`, or the [python.org](https://www.python.org/downloads/) installer). Prefer `python3`.
+3. Re-check the version. If you cannot install (no permission / sandbox), stop and tell the user the exact command to run.
+4. Prefer `python3` in all MasterG commands. Fall back to `python` only when it is 3.9+.
+
+Do **not** create a venv or install pip packages for MasterG.
+
 ## Rules (MUST / NEVER)
 
 1. **Evidence or `unverified`.** Every score and finding cites evidence. No evidence → `score: null`, `confidence: "unverified"`. Never guess.
@@ -40,7 +51,7 @@ This skill folder is self-contained. Paths below are relative to it.
 | Mode | When | Action |
 |---|---|---|
 | **review** (default) | `/masterg`, review/rate/roast/store-readiness, or new Play Console/analytics ask | Create next version |
-| **compare** | "compare v1 and v3", "how much did I improve" | `python scripts/masterg.py compare --from A --to B`, summarize in chat |
+| **compare** | "compare v1 and v3", "how much did I improve" | `python3 scripts/masterg.py compare --from A --to B`, summarize in chat |
 | **show** | "show my report" | Tell user to open `MasterG/report.html`. No new version |
 
 If `MasterG/` exists and the user says `/masterg`, create the **next** version from current codebase + any new `inputs/`.
@@ -51,7 +62,7 @@ If `MasterG/` exists and the user says `/masterg`, create the **next** version f
 Look for `MasterG/`. Run:
 
 ```bash
-python scripts/masterg.py status --project <user-project-root>
+python3 scripts/masterg.py status --project <user-project-root>
 ```
 
 Use `next_version`, previous overall, previous finding keys, previous metrics.
@@ -115,12 +126,12 @@ Write `MasterG/reports/vN/draft.json` matching `assets/draft.schema.json` (schem
 From the **skill** directory (so script can find `assets/`), or invoke via absolute path:
 
 ```bash
-python <skill>/scripts/masterg.py finalize --project <user-project-root>
+python3 <skill>/scripts/masterg.py finalize --project <user-project-root>
 ```
 
 Fix every error it prints; re-run. **Max 3 attempts**, then tell the user exactly what is failing.
 
-Requires **Python 3.9+**. If missing, say so clearly.
+Requires **Python 3.9+**. If missing, follow **Prerequisites** above (setup, then retry).
 
 ### 12. Chat reply (≤8 lines)
 1. Overall score and delta (or "Insufficient evidence")
@@ -133,9 +144,9 @@ Do **not** paste the full report into chat.
 ## Script commands
 
 ```bash
-python scripts/masterg.py status --project <path>
-python scripts/masterg.py finalize --project <path>
-python scripts/masterg.py compare --project <path> --from 1 --to 3
+python3 scripts/masterg.py status --project <path>
+python3 scripts/masterg.py finalize --project <path>
+python3 scripts/masterg.py compare --project <path> --from 1 --to 3
 ```
 
 `--project` defaults to cwd (the **user's** project root, not this skill folder).
