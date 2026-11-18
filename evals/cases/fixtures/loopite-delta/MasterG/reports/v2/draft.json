@@ -1,0 +1,436 @@
+{
+  "schema": "masterg.draft/1",
+  "product": {
+    "name": "LoopLite",
+    "type": "mobile_app",
+    "platforms": [
+      "android"
+    ],
+    "stack": "flutter",
+    "one_liner": "Minimal habit tracker with streak widgets",
+    "audience": "Busy adults who abandon complex habit apps",
+    "stage": "beta",
+    "goal": "earn",
+    "url": "",
+    "repo": "examples/sample-app"
+  },
+  "assumptions": [
+    "Creator can use Google Play billing and AdMob in their region",
+    "Primary market is English-speaking Android users"
+  ],
+  "inputs": [
+    {
+      "id": "i1",
+      "kind": "code",
+      "path": "lib/main.dart",
+      "note": "entry + nav"
+    },
+    {
+      "id": "i2",
+      "kind": "code",
+      "path": "lib/ads/ad_manager.dart",
+      "note": "ads"
+    },
+    {
+      "id": "i3",
+      "kind": "code",
+      "path": "pubspec.yaml",
+      "note": "deps"
+    },
+    {
+      "id": "i4",
+      "kind": "screenshot",
+      "path": "MasterG/inputs/v1/screenshots/home.png",
+      "note": "home"
+    },
+    {
+      "id": "i5",
+      "kind": "listing",
+      "path": "store/listing.txt",
+      "note": "draft listing"
+    },
+    {
+      "id": "i6",
+      "kind": "export",
+      "path": "MasterG/inputs/v1/exports/play_oct.csv",
+      "note": "Play Oct"
+    },
+    {
+      "id": "i7",
+      "kind": "export",
+      "path": "MasterG/inputs/v2/exports/play_nov.csv",
+      "note": "Play Nov"
+    },
+    {
+      "id": "i8",
+      "kind": "code",
+      "path": "lib/ads/ad_manager.dart",
+      "note": "capped ads"
+    },
+    {
+      "id": "i9",
+      "kind": "screenshot",
+      "path": "MasterG/inputs/v2/screenshots/home_empty.png",
+      "note": "empty state"
+    }
+  ],
+  "coverage": {
+    "files_reviewed": 22,
+    "files_total": 45,
+    "screenshots": 2,
+    "exports": 2,
+    "web_access": true,
+    "notes": "Re-reviewed ads, onboarding, empty states"
+  },
+  "competitors": [
+    {
+      "name": "Habitica",
+      "url": "https://habitica.com",
+      "overlap": "medium",
+      "why_relevant": "Habit tracking with gamification",
+      "source": "web"
+    },
+    {
+      "name": "Loop Habit Tracker",
+      "url": "https://play.google.com/store/apps/details?id=org.isoron.uhabits",
+      "overlap": "high",
+      "why_relevant": "Same core streak/habit loop, free/open",
+      "source": "web"
+    },
+    {
+      "name": "Streaks",
+      "url": "https://streaksapp.com",
+      "overlap": "high",
+      "why_relevant": "Minimal streak-focused habit app",
+      "source": "web"
+    }
+  ],
+  "categories": [
+    {
+      "id": "idea",
+      "applicable": true,
+      "score": 6,
+      "confidence": "high",
+      "summary": "Clear pain: complex habit apps overwhelm",
+      "why": "Busy adults abandon multi-feature habit apps; LoopLite targets streaks-only.",
+      "why_not_higher": "No primary interviews or review quotes proving willingness to switch.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "README.md:1",
+          "quote": "Minimal habit tracker for people who quit complex apps"
+        }
+      ]
+    },
+    {
+      "id": "differentiation",
+      "applicable": true,
+      "score": 4,
+      "confidence": "medium",
+      "summary": "Streaks-only angle exists but weakly owned",
+      "why": "Competes with Loop Habit Tracker and Streaks on the same core loop; uniqueness is thin.",
+      "why_not_higher": "Needs a hard wedge (offline widgets, privacy, or niche workflow) vs named peers.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:1",
+          "quote": "Simple streaks. No RPG. No social."
+        }
+      ]
+    },
+    {
+      "id": "revenue",
+      "applicable": true,
+      "score": 5,
+      "confidence": "medium",
+      "summary": "Frequency cap added; consent still missing",
+      "why": "Interstitials now gated by lastShownAt + 3 minutes. UMP still absent.",
+      "why_not_higher": "Add UMP consent and a non-ads revenue path.",
+      "evidence": [
+        {
+          "input": "i8",
+          "ref": "lib/ads/ad_manager.dart:50",
+          "quote": "if (now - lastShown < 3.min) return;"
+        }
+      ]
+    },
+    {
+      "id": "visual",
+      "applicable": true,
+      "score": 5,
+      "confidence": "medium",
+      "summary": "Readable but generic Material defaults",
+      "why": "Single screenshot shows default purple Material primary and uneven spacing.",
+      "why_not_higher": "Custom palette, type scale, and consistent 8dp spacing across screens.",
+      "evidence": [
+        {
+          "input": "i4",
+          "ref": "home.png \u2014 header",
+          "quote": "Default purple AppBar; dense list tiles"
+        }
+      ]
+    },
+    {
+      "id": "ux",
+      "applicable": true,
+      "score": 6,
+      "confidence": "high",
+      "summary": "Permission deferred to reminder toggle",
+      "why": "Notification permission moved to reminder enable path.",
+      "why_not_higher": "First-run coach mark / empty-state still light.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/widgets/reminder_toggle.dart:20",
+          "quote": "requestPermission() on enable"
+        }
+      ]
+    },
+    {
+      "id": "retention",
+      "applicable": true,
+      "score": 4,
+      "confidence": "medium",
+      "summary": "Streaks exist; no return trigger beyond local notifs",
+      "why": "Habit model stores streakCount; no meaningful re-engagement beyond permission ask.",
+      "why_not_higher": "Widget + smart reminder cadence with measured D1/D7.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/models/habit.dart:15",
+          "quote": "int streakCount"
+        }
+      ]
+    },
+    {
+      "id": "growth",
+      "applicable": true,
+      "score": 5,
+      "confidence": "medium",
+      "summary": "Listing improved; still no share loop",
+      "why": "Longer description and feature bullets added.",
+      "why_not_higher": "Add share-streak or referral.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:2",
+          "quote": "Track up to 7 habits. Widgets. No RPG noise."
+        }
+      ]
+    },
+    {
+      "id": "technical",
+      "applicable": true,
+      "score": 6,
+      "confidence": "high",
+      "summary": "Readable Flutter structure; tests thin",
+      "why": "Feature folders exist; one widget test; Crashlytics absent.",
+      "why_not_higher": "Add crash reporting and tests around streak edge cases.",
+      "evidence": [
+        {
+          "input": "i3",
+          "ref": "pubspec.yaml:12",
+          "quote": "flutter_test in dev_dependencies only"
+        }
+      ]
+    },
+    {
+      "id": "trust",
+      "applicable": true,
+      "score": 5,
+      "confidence": "high",
+      "summary": "Privacy URL in listing; ads consent still open",
+      "why": "Listing now includes privacy URL; UMP not implemented.",
+      "why_not_higher": "Wire consent before personalized ads.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:4",
+          "quote": "Privacy: https://example.com/loopite/privacy"
+        }
+      ]
+    },
+    {
+      "id": "polish",
+      "applicable": true,
+      "score": 6,
+      "confidence": "high",
+      "summary": "Empty state added on home",
+      "why": "EmptyHabits view with Create CTA ships.",
+      "why_not_higher": "Offline and error states still thin.",
+      "evidence": [
+        {
+          "input": "i9",
+          "ref": "home_empty.png \u2014 center",
+          "quote": "No habits yet \u00b7 Create your first streak"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "key": "revenue/no-ump-consent",
+      "category": "revenue",
+      "severity": "major",
+      "title": "No UMP/consent flow before ads",
+      "why": "Ads still initialize without a consent form where required.",
+      "counterpoint": "Non-personalized ads only could reduce risk short-term.",
+      "evidence": [
+        {
+          "input": "i8",
+          "ref": "lib/ads/ad_manager.dart:10",
+          "quote": "MobileAds.instance.initialize();"
+        }
+      ],
+      "fix": "Integrate UMP and gate personalized ads on consent.",
+      "effort": "M",
+      "impact": "H"
+    },
+    {
+      "key": "differentiation/thin-wedge",
+      "category": "differentiation",
+      "severity": "major",
+      "title": "Still no hard wedge vs Loop Habit Tracker",
+      "why": "Core loop remains generic streaks; listing claims are not unique.",
+      "counterpoint": "Execution quality can win a niche without a novel feature.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:2",
+          "quote": "Track up to 7 habits. Widgets. No RPG noise."
+        }
+      ],
+      "fix": "Pick one ownable wedge (privacy-first, home-screen widgets pack, or coaching) and lead with it.",
+      "effort": "L",
+      "impact": "H"
+    },
+    {
+      "key": "retention/no-widget-pack",
+      "category": "retention",
+      "severity": "minor",
+      "title": "No home-screen widget yet",
+      "why": "Streaks need a glanceable return surface; none found.",
+      "counterpoint": "Notifications alone can work if well timed.",
+      "evidence": [
+        {
+          "input": "i3",
+          "ref": "pubspec.yaml:12",
+          "quote": "no home_widget dependency"
+        }
+      ],
+      "fix": "Ship a simple streak widget.",
+      "effort": "M",
+      "impact": "M"
+    }
+  ],
+  "previous_findings_review": [
+    {
+      "key": "revenue/no-ad-frequency-cap",
+      "status": "resolved",
+      "evidence": [
+        {
+          "input": "i8",
+          "ref": "lib/ads/ad_manager.dart:50",
+          "quote": "if (now - lastShown < 3.min) return;"
+        }
+      ]
+    },
+    {
+      "key": "ux/permissions-before-value",
+      "status": "resolved",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/widgets/reminder_toggle.dart:20",
+          "quote": "requestPermission() on enable"
+        }
+      ]
+    },
+    {
+      "key": "trust/missing-privacy-policy",
+      "status": "resolved",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:4",
+          "quote": "Privacy: https://example.com/loopite/privacy"
+        }
+      ]
+    },
+    {
+      "key": "polish/no-empty-state",
+      "status": "resolved",
+      "evidence": [
+        {
+          "input": "i9",
+          "ref": "home_empty.png \u2014 center",
+          "quote": "No habits yet \u00b7 Create your first streak"
+        }
+      ]
+    }
+  ],
+  "strengths": [
+    {
+      "title": "Ad frequency cap shipped",
+      "evidence": [
+        {
+          "input": "i8",
+          "ref": "lib/ads/ad_manager.dart:50",
+          "quote": "if (now - lastShown < 3.min) return;"
+        }
+      ]
+    },
+    {
+      "title": "Permission ask moved to reminder enable",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/widgets/reminder_toggle.dart:20",
+          "quote": "requestPermission() on enable"
+        }
+      ]
+    },
+    {
+      "title": "Home empty state with clear CTA",
+      "evidence": [
+        {
+          "input": "i9",
+          "ref": "home_empty.png \u2014 center",
+          "quote": "No habits yet \u00b7 Create your first streak"
+        }
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "name": "installs",
+      "value": 610,
+      "period": "2026-11",
+      "source": "i7",
+      "note": "Play Console new users"
+    },
+    {
+      "name": "rating_avg",
+      "value": 4.1,
+      "period": "2026-11",
+      "source": "i7",
+      "note": ""
+    },
+    {
+      "name": "rating_count",
+      "value": 41,
+      "period": "2026-11",
+      "source": "i7",
+      "note": ""
+    },
+    {
+      "name": "retention_d1",
+      "value": 28.0,
+      "period": "2026-11",
+      "source": "i7",
+      "note": "Play retention"
+    }
+  ],
+  "verdict_line": "Core UX wounds from v1 are closed; monetization consent and differentiation still decide whether this earns.",
+  "calibration_note": ""
+}

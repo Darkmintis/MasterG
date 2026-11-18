@@ -1,0 +1,27 @@
+[
+  {
+    "version": 1,
+    "date": "2026-11-18",
+    "overall": 43.8,
+    "evidence_coverage": 1.0,
+    "verdict_band": "weak",
+    "key_metrics": {
+      "installs": 420,
+      "rating_avg": 3.9,
+      "rating_count": 28
+    }
+  },
+  {
+    "version": 2,
+    "date": "2026-11-18",
+    "overall": 51.4,
+    "evidence_coverage": 1.0,
+    "verdict_band": "average",
+    "key_metrics": {
+      "installs": 610,
+      "rating_avg": 4.1,
+      "rating_count": 41,
+      "retention_d1": 28.0
+    }
+  }
+]

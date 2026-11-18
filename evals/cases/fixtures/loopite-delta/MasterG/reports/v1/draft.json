@@ -1,0 +1,374 @@
+{
+  "schema": "masterg.draft/1",
+  "product": {
+    "name": "LoopLite",
+    "type": "mobile_app",
+    "platforms": [
+      "android"
+    ],
+    "stack": "flutter",
+    "one_liner": "Minimal habit tracker with streak widgets",
+    "audience": "Busy adults who abandon complex habit apps",
+    "stage": "beta",
+    "goal": "earn",
+    "url": "",
+    "repo": "examples/sample-app"
+  },
+  "assumptions": [
+    "Creator can use Google Play billing and AdMob in their region",
+    "Primary market is English-speaking Android users"
+  ],
+  "inputs": [
+    {
+      "id": "i1",
+      "kind": "code",
+      "path": "lib/main.dart",
+      "note": "entry + nav"
+    },
+    {
+      "id": "i2",
+      "kind": "code",
+      "path": "lib/ads/ad_manager.dart",
+      "note": "ads"
+    },
+    {
+      "id": "i3",
+      "kind": "code",
+      "path": "pubspec.yaml",
+      "note": "deps"
+    },
+    {
+      "id": "i4",
+      "kind": "screenshot",
+      "path": "MasterG/inputs/v1/screenshots/home.png",
+      "note": "home"
+    },
+    {
+      "id": "i5",
+      "kind": "listing",
+      "path": "store/listing.txt",
+      "note": "draft listing"
+    },
+    {
+      "id": "i6",
+      "kind": "export",
+      "path": "MasterG/inputs/v1/exports/play_oct.csv",
+      "note": "Play Oct"
+    }
+  ],
+  "coverage": {
+    "files_reviewed": 18,
+    "files_total": 42,
+    "screenshots": 1,
+    "exports": 1,
+    "web_access": true,
+    "notes": "Sampled lib/ features; no iOS project reviewed"
+  },
+  "competitors": [
+    {
+      "name": "Habitica",
+      "url": "https://habitica.com",
+      "overlap": "medium",
+      "why_relevant": "Habit tracking with gamification",
+      "source": "web"
+    },
+    {
+      "name": "Loop Habit Tracker",
+      "url": "https://play.google.com/store/apps/details?id=org.isoron.uhabits",
+      "overlap": "high",
+      "why_relevant": "Same core streak/habit loop, free/open",
+      "source": "web"
+    },
+    {
+      "name": "Streaks",
+      "url": "https://streaksapp.com",
+      "overlap": "high",
+      "why_relevant": "Minimal streak-focused habit app",
+      "source": "web"
+    }
+  ],
+  "categories": [
+    {
+      "id": "idea",
+      "applicable": true,
+      "score": 6,
+      "confidence": "high",
+      "summary": "Clear pain: complex habit apps overwhelm",
+      "why": "Busy adults abandon multi-feature habit apps; LoopLite targets streaks-only.",
+      "why_not_higher": "No primary interviews or review quotes proving willingness to switch.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "README.md:1",
+          "quote": "Minimal habit tracker for people who quit complex apps"
+        }
+      ]
+    },
+    {
+      "id": "differentiation",
+      "applicable": true,
+      "score": 4,
+      "confidence": "medium",
+      "summary": "Streaks-only angle exists but weakly owned",
+      "why": "Competes with Loop Habit Tracker and Streaks on the same core loop; uniqueness is thin.",
+      "why_not_higher": "Needs a hard wedge (offline widgets, privacy, or niche workflow) vs named peers.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:1",
+          "quote": "Simple streaks. No RPG. No social."
+        }
+      ]
+    },
+    {
+      "id": "revenue",
+      "applicable": true,
+      "score": 3,
+      "confidence": "medium",
+      "summary": "Ads present without frequency caps or consent",
+      "why": "AdMob interstitial helper exists; no cap and no UMP flow found.",
+      "why_not_higher": "Add consent, caps, and a believable paid tier or rewarded-only path.",
+      "evidence": [
+        {
+          "input": "i2",
+          "ref": "lib/ads/ad_manager.dart:42",
+          "quote": "showInterstitial() // every navigation"
+        }
+      ]
+    },
+    {
+      "id": "visual",
+      "applicable": true,
+      "score": 5,
+      "confidence": "medium",
+      "summary": "Readable but generic Material defaults",
+      "why": "Single screenshot shows default purple Material primary and uneven spacing.",
+      "why_not_higher": "Custom palette, type scale, and consistent 8dp spacing across screens.",
+      "evidence": [
+        {
+          "input": "i4",
+          "ref": "home.png \u2014 header",
+          "quote": "Default purple AppBar; dense list tiles"
+        }
+      ]
+    },
+    {
+      "id": "ux",
+      "applicable": true,
+      "score": 4,
+      "confidence": "high",
+      "summary": "Permissions before first value",
+      "why": "Notification permission requested on first frame before any habit is created.",
+      "why_not_higher": "Defer permissions until the user schedules a reminder.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/main.dart:28",
+          "quote": "requestNotificationPermission() in initState"
+        }
+      ]
+    },
+    {
+      "id": "retention",
+      "applicable": true,
+      "score": 4,
+      "confidence": "medium",
+      "summary": "Streaks exist; no return trigger beyond local notifs",
+      "why": "Habit model stores streakCount; no meaningful re-engagement beyond permission ask.",
+      "why_not_higher": "Widget + smart reminder cadence with measured D1/D7.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/models/habit.dart:15",
+          "quote": "int streakCount"
+        }
+      ]
+    },
+    {
+      "id": "growth",
+      "applicable": true,
+      "score": 4,
+      "confidence": "medium",
+      "summary": "Listing draft is thin; no share surface",
+      "why": "Short listing text; no screenshots set in repo; no invite/share.",
+      "why_not_higher": "Full store assets + one referral or share-streak action.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:1",
+          "quote": "Simple streaks. No RPG. No social."
+        }
+      ]
+    },
+    {
+      "id": "technical",
+      "applicable": true,
+      "score": 6,
+      "confidence": "high",
+      "summary": "Readable Flutter structure; tests thin",
+      "why": "Feature folders exist; one widget test; Crashlytics absent.",
+      "why_not_higher": "Add crash reporting and tests around streak edge cases.",
+      "evidence": [
+        {
+          "input": "i3",
+          "ref": "pubspec.yaml:12",
+          "quote": "flutter_test in dev_dependencies only"
+        }
+      ]
+    },
+    {
+      "id": "trust",
+      "applicable": true,
+      "score": 4,
+      "confidence": "high",
+      "summary": "Privacy policy link missing; broad permissions",
+      "why": "INTERNET + POST_NOTIFICATIONS; no privacy URL in listing draft.",
+      "why_not_higher": "Ship policy URL and trim permissions to features used.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "AndroidManifest.xml:8",
+          "quote": "POST_NOTIFICATIONS"
+        }
+      ]
+    },
+    {
+      "id": "polish",
+      "applicable": true,
+      "score": 4,
+      "confidence": "high",
+      "summary": "Beta-rough: empty states missing",
+      "why": "Home list has no empty-state illustration/copy when habits.isEmpty.",
+      "why_not_higher": "Empty, offline, and error states before store submit.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/screens/home_screen.dart:55",
+          "quote": "ListView(children: habits.map..."
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "key": "revenue/no-ad-frequency-cap",
+      "category": "revenue",
+      "severity": "critical",
+      "title": "Interstitials on every navigation with no frequency cap",
+      "why": "showInterstitial is called on every route change. That invites accidental taps and policy risk.",
+      "counterpoint": "Acceptable only if limited to rewarded ads behind an explicit user action.",
+      "evidence": [
+        {
+          "input": "i2",
+          "ref": "lib/ads/ad_manager.dart:42",
+          "quote": "showInterstitial() // every navigation"
+        }
+      ],
+      "fix": "Cap interstitials (e.g. once per 3 minutes) and never place beside primary CTAs.",
+      "effort": "S",
+      "impact": "H"
+    },
+    {
+      "key": "ux/permissions-before-value",
+      "category": "ux",
+      "severity": "major",
+      "title": "Notification permission before first habit",
+      "why": "Permission runs in initState before the user sees value, raising early drop-off risk.",
+      "counterpoint": "Power users may want reminders immediately \u2014 still ask contextually.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/main.dart:28",
+          "quote": "requestNotificationPermission() in initState"
+        }
+      ],
+      "fix": "Ask when enabling a reminder on a habit.",
+      "effort": "S",
+      "impact": "H"
+    },
+    {
+      "key": "trust/missing-privacy-policy",
+      "category": "trust",
+      "severity": "major",
+      "title": "No privacy policy URL while ads/analytics likely",
+      "why": "Listing draft has no policy link; ads SDK implies data collection.",
+      "counterpoint": "Not critical until store submission \u2014 but goal is earn/live soon.",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:1",
+          "quote": "Simple streaks. No RPG. No social."
+        }
+      ],
+      "fix": "Publish a policy page and link it in-app and on the store listing.",
+      "effort": "M",
+      "impact": "H"
+    },
+    {
+      "key": "polish/no-empty-state",
+      "category": "polish",
+      "severity": "minor",
+      "title": "Home has no empty state",
+      "why": "New users see a blank list with no guidance to create a habit.",
+      "counterpoint": "A FAB alone can be enough for some apps; still weak for first session.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/screens/home_screen.dart:55",
+          "quote": "ListView(children: habits.map..."
+        }
+      ],
+      "fix": "Add empty-state copy + primary Create habit CTA.",
+      "effort": "S",
+      "impact": "M"
+    }
+  ],
+  "previous_findings_review": [],
+  "strengths": [
+    {
+      "title": "Focused one-liner vs RPG habit apps",
+      "evidence": [
+        {
+          "input": "i5",
+          "ref": "store/listing.txt:1",
+          "quote": "Simple streaks. No RPG. No social."
+        }
+      ]
+    },
+    {
+      "title": "Readable feature-folder Flutter layout",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "lib/main.dart:1",
+          "quote": "import screens/home_screen.dart"
+        }
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "name": "installs",
+      "value": 420,
+      "period": "2026-10",
+      "source": "i6",
+      "note": "Play Console new users"
+    },
+    {
+      "name": "rating_avg",
+      "value": 3.9,
+      "period": "2026-10",
+      "source": "i6",
+      "note": ""
+    },
+    {
+      "name": "rating_count",
+      "value": 28,
+      "period": "2026-10",
+      "source": "i6",
+      "note": ""
+    }
+  ],
+  "verdict_line": "Clear niche, but uncapped ads and permission-before-value will burn the few installs you get.",
+  "calibration_note": ""
+}

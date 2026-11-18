@@ -1,0 +1,28 @@
+{
+  "skill": "masterg",
+  "description": "Queries that should / should not load MasterG. Used to tune SKILL.md description.",
+  "should_trigger": [
+    "review my app",
+    "rate my game honestly",
+    "here's my Play Console report, how did I do vs last month?",
+    "is this idea worth building",
+    "what should I fix first before launch",
+    "/masterg",
+    "roast my app",
+    "is my app good",
+    "store readiness check for my Flutter app",
+    "compare this month's analytics to last month for my product"
+  ],
+  "should_not_trigger": [
+    "review this pull request",
+    "do a security audit",
+    "write my Play Store description",
+    "fix this crash",
+    "refactor this widget",
+    "add unit tests for AuthService",
+    "optimize this SQL query",
+    "translate my README to Spanish",
+    "set up CI for this repo",
+    "explain how Riverpod works"
+  ]
+}

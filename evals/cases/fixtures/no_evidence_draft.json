@@ -1,0 +1,149 @@
+{
+  "schema": "masterg.draft/1",
+  "product": {
+    "name": "LoopLite",
+    "type": "mobile_app",
+    "platforms": [],
+    "stack": "",
+    "one_liner": "Minimal habit tracker",
+    "audience": "",
+    "stage": "idea",
+    "goal": "earn",
+    "url": "",
+    "repo": ""
+  },
+  "assumptions": [
+    "No codebase provided"
+  ],
+  "inputs": [
+    {
+      "id": "i1",
+      "kind": "text",
+      "path": "",
+      "note": "user one-liner"
+    }
+  ],
+  "coverage": {
+    "files_reviewed": 0,
+    "files_total": 0,
+    "screenshots": 0,
+    "exports": 0,
+    "web_access": false,
+    "notes": "name + one-liner only"
+  },
+  "competitors": [],
+  "categories": [
+    {
+      "id": "idea",
+      "applicable": true,
+      "score": 4,
+      "confidence": "low",
+      "summary": "Only a one-liner exists",
+      "why": "Name and one-liner only; no users, screens, or code.",
+      "why_not_higher": "Need audience evidence and a real build.",
+      "evidence": [
+        {
+          "input": "i1",
+          "ref": "user message",
+          "quote": "LoopLite \u2014 minimal habit tracker"
+        }
+      ]
+    },
+    {
+      "id": "differentiation",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    },
+    {
+      "id": "revenue",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    },
+    {
+      "id": "visual",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    },
+    {
+      "id": "ux",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    },
+    {
+      "id": "retention",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    },
+    {
+      "id": "growth",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    },
+    {
+      "id": "technical",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    },
+    {
+      "id": "trust",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    },
+    {
+      "id": "polish",
+      "applicable": true,
+      "score": null,
+      "confidence": "unverified",
+      "summary": "unverified",
+      "why": "",
+      "why_not_higher": "",
+      "evidence": []
+    }
+  ],
+  "findings": [],
+  "previous_findings_review": [],
+  "strengths": [],
+  "metrics": [],
+  "verdict_line": "Insufficient evidence to judge beyond a vague idea.",
+  "calibration_note": "More than 3 categories unverified because only a one-liner was provided; coverage is intentionally thin."
+}
