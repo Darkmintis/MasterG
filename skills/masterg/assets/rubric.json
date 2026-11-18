@@ -1,0 +1,151 @@
+{
+  "rubric_version": "1.0.0",
+  "score_scale": { "min": 1, "max": 10 },
+  "overall_scale": { "min": 0, "max": 100 },
+  "verdict_bands": [
+    { "min": 0, "max": 34, "id": "not_viable", "label": "Not viable as is" },
+    { "min": 35, "max": 49, "id": "weak", "label": "Weak" },
+    { "min": 50, "max": 64, "id": "average", "label": "Average" },
+    { "min": 65, "max": 79, "id": "strong", "label": "Strong" },
+    { "min": 80, "max": 100, "id": "exceptional", "label": "Exceptional" }
+  ],
+  "confidence_caps": {
+    "high": 10,
+    "medium": 8,
+    "low": 6,
+    "unverified": null
+  },
+  "min_evidence_coverage_for_overall": 0.5,
+  "categories": [
+    {
+      "id": "idea",
+      "name": "Idea & Problem",
+      "weight": 10,
+      "question": "Is the problem real and painful? Who exactly has it?",
+      "anchors": {
+        "3": "Vague problem, no clear sufferer, or solution looking for a problem.",
+        "5": "Recognizable problem for a named audience; pain is plausible but unproven.",
+        "7": "Clear ICP, painful job-to-be-done, evidence from users/store/reviews or domain knowledge with sources.",
+        "9": "Narrow, urgent problem with named competitors and proof people already pay or churn without a fix."
+      },
+      "verified_by": ["code", "listing", "url", "text", "export", "screenshot"]
+    },
+    {
+      "id": "differentiation",
+      "name": "Differentiation",
+      "weight": 12,
+      "question": "Why this over what exists? Is it generic?",
+      "anchors": {
+        "3": "Feature-parity clone; no named reason to switch.",
+        "5": "One real angle (niche, UX, price, platform) but easy to copy or weakly communicated.",
+        "7": "Clear, defensible difference vs at least 3 named competitors with sources.",
+        "9": "Hard-to-copy wedge (data, workflow lock-in, distribution, unique IP) proven against named peers."
+      },
+      "verified_by": ["listing", "url", "text", "code", "screenshot"]
+    },
+    {
+      "id": "revenue",
+      "name": "Revenue Model",
+      "weight": 12,
+      "question": "Is there a believable path to money for this product and this creator?",
+      "anchors": {
+        "3": "No model, or model the creator cannot collect (payments/region), or ads-only with no placement plan.",
+        "5": "A model exists (ads/IAP/sub) but unit economics or fit are hand-wavy.",
+        "7": "Model fits audience and creator constraints; placement/pricing/consent sketched with evidence.",
+        "9": "Credible ceiling math with labeled assumptions; model matches comparable products with sources."
+      },
+      "verified_by": ["code", "export", "listing", "text", "screenshot"]
+    },
+    {
+      "id": "visual",
+      "name": "UI & Visual Design",
+      "weight": 10,
+      "question": "Color, contrast, type, spacing, hierarchy, consistency",
+      "anchors": {
+        "3": "Clashing palette, illegible text, inconsistent components; looks unfinished.",
+        "5": "Readable and consistent enough to ship; few hierarchy or density issues.",
+        "7": "Tight system: palette, type scale, spacing, one primary action; AA contrast on reviewed screens.",
+        "9": "Polished, distinctive visual language that still meets accessibility and consistency checks."
+      },
+      "verified_by": ["screenshot", "code"]
+    },
+    {
+      "id": "ux",
+      "name": "UX & Onboarding",
+      "weight": 10,
+      "question": "Time to first value, friction, flows, states",
+      "anchors": {
+        "3": "Long path to value; permission walls; missing empty/error/offline states.",
+        "5": "User can reach core value with some friction; main happy path works.",
+        "7": "Fast first value, clear flows, good empty/loading/error coverage on reviewed paths.",
+        "9": "Onboarding and recovery paths feel intentional; friction is justified and measured."
+      },
+      "verified_by": ["screenshot", "code", "export", "text"]
+    },
+    {
+      "id": "retention",
+      "name": "Retention & Engagement",
+      "weight": 12,
+      "question": "Why would anyone come back? Is there a loop?",
+      "anchors": {
+        "3": "One-shot utility; no reason or reminder to return.",
+        "5": "A loop exists (habit, content, progress, social) but weak or unmeasured.",
+        "7": "Clear return loop with triggers (notifications, streaks, new content) backed by code or metrics.",
+        "9": "Loop + proof (retention metrics or strong engagement design) vs comparable products."
+      },
+      "verified_by": ["code", "export", "screenshot", "text"]
+    },
+    {
+      "id": "growth",
+      "name": "Growth & Distribution",
+      "weight": 10,
+      "question": "Store listing / SEO, channels, virality, shareability",
+      "anchors": {
+        "3": "Weak listing/SEO, no channels, nothing shareable.",
+        "5": "Basic listing or landing page; one plausible channel.",
+        "7": "Strong listing/SEO assets, clear channels, some share or referral surface.",
+        "9": "Listing + channels + measurable conversion or virality with sourced evidence."
+      },
+      "verified_by": ["listing", "url", "export", "screenshot", "text"]
+    },
+    {
+      "id": "technical",
+      "name": "Technical Quality",
+      "weight": 10,
+      "question": "Architecture, performance, tests, security (from the codebase)",
+      "anchors": {
+        "3": "Fragile structure, secrets in repo, no tests, obvious perf footguns.",
+        "5": "Readable architecture for the stage; some tests or crash reporting; no glaring secrets.",
+        "7": "Consistent patterns, meaningful tests, release hygiene, basic security hygiene.",
+        "9": "Strong architecture and observability for the product stage; evidence of perf/reliability work."
+      },
+      "verified_by": ["code", "export"]
+    },
+    {
+      "id": "trust",
+      "name": "Trust & Compliance",
+      "weight": 6,
+      "question": "Privacy policy, permissions, store policy, consent, data safety",
+      "anchors": {
+        "3": "Missing privacy policy, over-broad permissions, no consent where required.",
+        "5": "Policy and permissions present; some gaps vs data collected.",
+        "7": "Policy, consent, permissions, and data-safety claims align with code.",
+        "9": "Tight alignment plus store-policy awareness with evidence (listings, SDK config, consent UI)."
+      },
+      "verified_by": ["code", "listing", "url", "screenshot", "text"]
+    },
+    {
+      "id": "polish",
+      "name": "Polish & Store Readiness",
+      "weight": 8,
+      "question": "Completeness, bugs, edge cases, ready to ship?",
+      "anchors": {
+        "3": "Placeholder copy, broken edges, not shippable.",
+        "5": "Core flows work; rough edges remain; maybe soft-launchable.",
+        "7": "Store assets ready, edge cases handled on reviewed paths, release config sane.",
+        "9": "Ship-ready with strong store assets and few open critical/major findings."
+      },
+      "verified_by": ["code", "screenshot", "listing", "export"]
+    }
+  ]
+}

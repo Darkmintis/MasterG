@@ -1,0 +1,20 @@
+# Local
+.local/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+
+# graphify (local knowledge graph)
+graphify-out/
