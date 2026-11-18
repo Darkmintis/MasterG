@@ -1,8 +1,8 @@
 <h1 align="center">MasterG</h1>
 
-<p align="center">
-  <code>npx skills add Darkmintis/MasterG</code>
-</p>
+```bash
+npx skills add Darkmintis/MasterG
+```
 
 <p align="center">
   <img src="docs/screenshots/report-desktop.png" alt="MasterG sample report for Blink" width="900">
